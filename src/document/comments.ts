@@ -1,5 +1,11 @@
-import { XmlParser } from "../parser/xml-parser.ts";
-import { DomType, OpenXmlElement } from "./dom.ts";
+/*
+ * @Author: xujiang
+ * @Date: 2023-11-12 17:20:01
+ * @LastEditors: xujiang
+ * Copyright (c) 2023 by xujiang/cicc, All Rights Reserved.
+ */
+import { XmlParser } from "../parser/xml-parser";
+import { DomType, OpenXmlElement } from "./dom";
 
 export interface WmlCommentReference extends OpenXmlElement {
   id: string

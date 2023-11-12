@@ -1,8 +1,8 @@
-import { OpenXmlPackage } from "../common/open-xml-package.ts";
-import { Part } from "../common/part.ts";
-import { DocumentParser } from "../document-parser.ts";
-import { IComment } from "../document/dom.ts";
-import {CommentsPartProperties, parseCommentsPart } from "./comments.ts";
+import { OpenXmlPackage } from "../common/open-xml-package";
+import { Part } from "../common/part";
+import { DocumentParser } from "../document-parser";
+import { IComment } from "../document/dom";
+import {CommentsPartProperties, parseCommentsPart } from "./comments";
 
 export class CommentsPart extends Part implements CommentsPartProperties {
     private _documentParser: DocumentParser;

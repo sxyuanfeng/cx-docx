@@ -1,11 +1,5 @@
-/*
- * @Author: xujiang
- * @Date: 2023-11-06 10:26:54
- * @LastEditors: xujiang
- * Copyright (c) 2023 by xujiang/cicc, All Rights Reserved.
- */
-import { ICommentExtended } from "../document/dom.ts";
-import { XmlParser } from "../parser/xml-parser.ts";
+import { ICommentExtended } from "../document/dom";
+import { XmlParser } from "../parser/xml-parser";
 
 export interface CommentsExtendedPartProperties {
     commentsEx: ICommentExtended[];

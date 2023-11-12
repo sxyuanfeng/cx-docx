@@ -1,5 +1,5 @@
-import { IComment } from "../document/dom.ts";
-import { XmlParser } from "../parser/xml-parser.ts";
+import { IComment } from "../document/dom";
+import { XmlParser } from "../parser/xml-parser";
 
 export interface CommentsPartProperties {
     comments: IComment[];
