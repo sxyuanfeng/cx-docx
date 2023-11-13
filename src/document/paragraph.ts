@@ -7,6 +7,7 @@ import { XmlParser } from "../parser/xml-parser";
 import { parseRunProperties, RunProperties } from "./run";
 
 export interface WmlParagraph extends OpenXmlElement, ParagraphProperties {
+    noRenderNumbering: boolean
 }
 
 export interface ParagraphProperties extends CommonProperties {

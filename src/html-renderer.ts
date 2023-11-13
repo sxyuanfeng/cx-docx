@@ -20,13 +20,12 @@ import { BaseHeaderFooterPart } from './header-footer/parts';
 import { Part } from './common/part';
 import { VmlElement } from './vml/vml';
 import createPopover from './popover.js';
+import { commentPng } from './assets';
 
 const ns = {
 	svg: "http://www.w3.org/2000/svg",
 	mathML: "http://www.w3.org/1998/Math/MathML"
 }
-
-let commentPng = require('./assets/comment.png');
 
 interface CellPos {
 	col: number;
@@ -70,7 +69,7 @@ export class HtmlRenderer {
 		for (let i = pArr.length - 1; i > -1; i--) {
 			let pChildren = pArr[i].children;
 			for (let j = (pChildren?.length || 0) -1; j > -1; j--) {
-				let child: IComment = pChildren?.[j];
+				let child = (pChildren?.[j] as IComment);
 				if (child?.type === DomType.CommentRangeEnd) {
 					child.msg = this.getCommentRangeMsg(pArr, child?.id, i, j);
 					let newComment = Object.assign(this.processCommentPart(document, child?.id, child), child);
@@ -111,7 +110,7 @@ export class HtmlRenderer {
 	}
 
 	// 提取批注划线内容
-	getCommentRangeMsg(pArr: OpenXmlElement[], id: string, iIndex: number, jIndex: number): string {
+	getCommentRangeMsg(pArr, id: string, iIndex: number, jIndex: number): string {
 		let result = [];
 		let count = 0;
 		for (let i = iIndex; i > -1; i--) {
@@ -455,7 +454,7 @@ export class HtmlRenderer {
 		return (elem as WmlBreak).break == "page";
 	}
 
-	splitBySection(elements: OpenXmlElement[]): { sectProps: SectionProperties, elements: OpenXmlElement[] }[] {
+	splitBySection(elements): { sectProps: SectionProperties, elements: OpenXmlElement[] }[] {
 		var current = { sectProps: null, elements: [] };
 		var result = [current];
 
@@ -548,7 +547,8 @@ export class HtmlRenderer {
 				let ref;
 				for (let child of p.children || []) {
 					if (child.type === "bookmarkStart" || child.type === "bookmarkEnd") {
-						ref = child.name;
+						let c = child as WmlBookmarkStart;
+						ref = c.name;
 						break;
 					}
 				}
@@ -1130,7 +1130,7 @@ section.${c}>footer { z-index: 1; }
 		return null;
 	}
 
-	renderInstrText(elem: OpenXmlElement): Node {
+	renderInstrText(elem): Node {
 		let text = elem.text;
 		if (text.split(' ')[0] === "REF") {
 			let id = Math.random();
@@ -1178,7 +1178,7 @@ section.${c}>footer { z-index: 1; }
 	}
 
 	// 在指定位置渲染批注
-	renderCommentReference(elem: IComment): Node {
+	renderCommentReference(elem): Node {
 		if (!elem.noRender && this.options.renderComments) {
 			let supNode = this.createCommentSupNode();
 			supNode.addEventListener("click", () => {
@@ -1191,7 +1191,7 @@ section.${c}>footer { z-index: 1; }
 	}
 
 	// 渲染批注内容
-	createCommentContentNode(elem: IComment): Node {
+	createCommentContentNode(elem): Node {
 		let commentsContainer = this.createElement("div");
 		let msgContainer = this.createElement("div");
 		msgContainer.textContent = elem.msg;
@@ -1214,7 +1214,7 @@ section.${c}>footer { z-index: 1; }
 	}
 
 	// 渲染单个批注
-	createCommentNode(elem: IComment): Node {
+	createCommentNode(elem): Node {
 		let commentContainer = this.createElement("div");
 		let author = this.createElement("span");
 		author.style.marginRight = "10px";
@@ -1298,11 +1298,11 @@ section.${c}>footer { z-index: 1; }
 		if (!isNaN(Number(elem.styleName)) && Number(elem.styleName) !== 0 && elem?.numbering?.id !== '0') {
 			let titleLevel = elem.styleName;
 			if (elem.numbering && elem.numbering.level !== undefined && elem.numbering.level !== null && (elem.numbering.level > (Number(titleLevel) - 1))) {
-				titleLevel = elem.numbering.level;
+				titleLevel = `${elem.numbering.level}`;
 			} else {
-				titleLevel = (Number(titleLevel) - 1);
+				titleLevel = `${(Number(titleLevel) - 1)}`;
 			}
-			result.classList.add(this.numberingTitleClass(titleLevel));
+			result.classList.add(this.numberingTitleClass(Number(titleLevel)));
 
 			return result;
 		}
@@ -1439,12 +1439,12 @@ section.${c}>footer { z-index: 1; }
 		return span;
 	}
 
-	renderFootnoteReference(elem: WmlNoteReference) {
-		var result = this.createElement("sup");
-		this.currentFootnoteIds.push(elem.id);
-		result.textContent = `${this.currentFootnoteIds.length}`;
-		return result;
-	}
+	// renderFootnoteReference(elem: WmlNoteReference) {
+	// 	var result = this.createElement("sup");
+	// 	this.currentFootnoteIds.push(elem.id);
+	// 	result.textContent = `${this.currentFootnoteIds.length}`;
+	// 	return result;
+	// }
 
 	renderFootnoteReference(elem: WmlNoteReference) {
 		var result = this.createElement("sup");
@@ -1540,9 +1540,9 @@ section.${c}>footer { z-index: 1; }
 
 		let tblpXSpec = elem.cssStyle?.tblpXSpec;
 		if (tblpXSpec === 'center') {
-			let num = parseFloat(elem.cssStyle?.width || 0);
+			let num = parseFloat(elem.cssStyle?.width || '0');
 			let unit = elem.cssStyle?.width.replace(/[0-9]*/g, '').replace(/\./, '');
-			let left = ((100 - num) / 2).toFixed(2);
+			let left = ((100 - Number(num)) / 2).toFixed(2);
 			elem.cssStyle['margin-left'] = `${left}${unit}`;
 		} else if (tblpXSpec) {
 			elem.cssStyle.float = tblpXSpec;
@@ -1796,6 +1796,10 @@ section.${c}>footer { z-index: 1; }
 
 	numberingClass(id: string, lvl: number) {
 		return `${this.className}-num-${id}-${lvl}`;
+	}
+
+	numberingTitleClass(lvl: number) {
+		return `${this.className}-title-${lvl}`;
 	}
 
 	tabStopClass() {

@@ -1,6 +1,20 @@
 import * as __WEBPACK_EXTERNAL_MODULE_jszip__ from "jszip";
 /******/ var __webpack_modules__ = ({
 
+/***/ "./src/assets/index.ts":
+/*!*****************************!*\
+  !*** ./src/assets/index.ts ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.commentPng = void 0;
+exports.commentPng = 'data:image/png;base64,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';
+
+
+/***/ }),
+
 /***/ "./src/comments/comments-part.ts":
 /*!***************************************!*\
   !*** ./src/comments/comments-part.ts ***!
@@ -1898,9 +1912,27 @@ exports.parseBorders = parseBorders;
 /*!**********************************!*\
   !*** ./src/document/comments.ts ***!
   \**********************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-throw new Error("Module build failed (from ./node_modules/ts-loader/index.js):\nError: TypeScript emitted no output for D:\\project\\docxjs-master\\src\\document\\comments.ts.\n    at makeSourceMapAndFinish (D:\\project\\docxjs-master\\node_modules\\ts-loader\\dist\\index.js:55:18)\n    at successLoader (D:\\project\\docxjs-master\\node_modules\\ts-loader\\dist\\index.js:42:5)\n    at Object.loader (D:\\project\\docxjs-master\\node_modules\\ts-loader\\dist\\index.js:23:5)");
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.parseCommentRangeEnd = exports.parseCommentRangeStart = void 0;
+const dom_1 = __webpack_require__(/*! ./dom */ "./src/document/dom.ts");
+function parseCommentRangeStart(elem, xml) {
+    return {
+        type: dom_1.DomType.CommentRangeStart,
+        id: xml.attr(elem, "id"),
+    };
+}
+exports.parseCommentRangeStart = parseCommentRangeStart;
+function parseCommentRangeEnd(elem, xml) {
+    return {
+        type: dom_1.DomType.CommentRangeEnd,
+        id: xml.attr(elem, "id")
+    };
+}
+exports.parseCommentRangeEnd = parseCommentRangeEnd;
+
 
 /***/ }),
 
@@ -2521,9 +2553,1567 @@ exports.FooterPart = FooterPart;
 /*!******************************!*\
   !*** ./src/html-renderer.ts ***!
   \******************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-throw new Error("Module build failed (from ./node_modules/ts-loader/index.js):\nError: TypeScript emitted no output for D:\\project\\docxjs-master\\src\\html-renderer.ts.\n    at makeSourceMapAndFinish (D:\\project\\docxjs-master\\node_modules\\ts-loader\\dist\\index.js:55:18)\n    at successLoader (D:\\project\\docxjs-master\\node_modules\\ts-loader\\dist\\index.js:42:5)\n    at Object.loader (D:\\project\\docxjs-master\\node_modules\\ts-loader\\dist\\index.js:23:5)");
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.HtmlRenderer = void 0;
+const dom_1 = __webpack_require__(/*! ./document/dom */ "./src/document/dom.ts");
+const utils_1 = __webpack_require__(/*! ./utils */ "./src/utils.ts");
+const javascript_1 = __webpack_require__(/*! ./javascript */ "./src/javascript.ts");
+const popover_js_1 = __webpack_require__(/*! ./popover.js */ "./src/popover.js");
+const assets_1 = __webpack_require__(/*! ./assets */ "./src/assets/index.ts");
+const ns = {
+    svg: "http://www.w3.org/2000/svg",
+    mathML: "http://www.w3.org/1998/Math/MathML"
+};
+class HtmlRenderer {
+    constructor(htmlDocument) {
+        this.htmlDocument = htmlDocument;
+        this.className = "docx";
+        this.styleMap = {};
+        this.currentPart = null;
+        this.tableVerticalMerges = [];
+        this.currentVerticalMerge = null;
+        this.tableCellPositions = [];
+        this.currentCellPosition = null;
+        this.footnoteMap = {};
+        this.endnoteMap = {};
+        this.currentEndnoteIds = [];
+        this.usedHederFooterParts = [];
+        this.currentTabs = [];
+        this.tabsTimeout = 0;
+        this.createElement = createElement;
+    }
+    processCommentReference(document) {
+        console.log(document);
+        let pArr = document?.documentPart?.body?.children || [];
+        for (let i = pArr.length - 1; i > -1; i--) {
+            let pChildren = pArr[i].children;
+            for (let j = (pChildren?.length || 0) - 1; j > -1; j--) {
+                let child = pChildren?.[j];
+                if (child?.type === dom_1.DomType.CommentRangeEnd) {
+                    child.msg = this.getCommentRangeMsg(pArr, child?.id, i, j);
+                    let newComment = Object.assign(this.processCommentPart(document, child?.id, child), child);
+                    child.author = newComment.author;
+                    child.children = newComment.children;
+                    child.date = newComment.date;
+                    child.noRender = newComment.noRender;
+                    child.paraId = newComment.paraId;
+                    child.text = newComment.text;
+                }
+            }
+        }
+        return null;
+    }
+    processCommentPart(document, id, commentReference) {
+        let comments = document.commentsPart.comments;
+        let commentsEx = document.commentsExtendedPart.commentsEx;
+        let result = Object.assign(comments.find(item => {
+            return item.id === id;
+        }), commentReference);
+        result.children = [];
+        let children = commentsEx.filter(item => {
+            return item.paraIdParent === result?.paraId;
+        });
+        for (let child of children) {
+            let comment = comments.find(item => {
+                return item.paraId === child.paraId;
+            });
+            result.children.push(comment);
+        }
+        if (commentsEx.find(item => { return item.paraId === result.paraId; })?.paraIdParent) {
+            result.noRender = true;
+        }
+        return result;
+    }
+    getCommentRangeMsg(pArr, id, iIndex, jIndex) {
+        let result = [];
+        let count = 0;
+        for (let i = iIndex; i > -1; i--) {
+            let pChildren = pArr[i].children;
+            let rIndex = count === 0 ? jIndex : (pChildren?.length || 0) - 1;
+            for (let j = rIndex; j > -1; j--) {
+                let child = pChildren?.[j];
+                if (child?.type === dom_1.DomType.CommentRangeStart && child?.id === id) {
+                    return this.joinRangeText(result);
+                }
+                if (child?.type !== dom_1.DomType.CommentRangeStart && child?.type !== dom_1.DomType.CommentRangeEnd) {
+                    result.push(child);
+                }
+            }
+            count += 1;
+        }
+        return '';
+    }
+    joinRangeText(rArr) {
+        let result = '';
+        for (let i = 0; i < rArr.length; i++) {
+            let rChildren = rArr[i]?.children || [];
+            for (let child of rChildren) {
+                if (child && child?.type === dom_1.DomType.Text) {
+                    result = child.text + result;
+                }
+            }
+        }
+        return result;
+    }
+    render(document, bodyContainer, styleContainer = null, options) {
+        this.document = document;
+        this.options = options;
+        this.className = options.className;
+        this.rootSelector = options.inWrapper ? `.${this.className}-wrapper` : ':root';
+        this.styleMap = null;
+        styleContainer = styleContainer || bodyContainer;
+        this.processCommentReference(document);
+        removeAllElements(styleContainer);
+        removeAllElements(bodyContainer);
+        appendComment(styleContainer, "docxjs library predefined styles");
+        styleContainer.appendChild(this.renderDefaultStyle());
+        if (document.themePart) {
+            appendComment(styleContainer, "docxjs document theme values");
+            this.renderTheme(document.themePart, styleContainer);
+        }
+        if (document.stylesPart != null) {
+            this.styleMap = this.processStyles(document.stylesPart.styles);
+            appendComment(styleContainer, "docxjs document styles");
+            styleContainer.appendChild(this.renderStyles(document.stylesPart.styles));
+        }
+        if (document.numberingPart) {
+            this.prodessNumberings(document.numberingPart.domNumberings);
+            appendComment(styleContainer, "docxjs document numbering styles");
+            styleContainer.appendChild(this.renderTitleNumbering(document.documentPart.body.children, document.numberingPart.domNumberings, styleContainer));
+        }
+        if (document.footnotesPart) {
+            this.footnoteMap = (0, utils_1.keyBy)(document.footnotesPart.notes, x => x.id);
+        }
+        if (document.endnotesPart) {
+            this.endnoteMap = (0, utils_1.keyBy)(document.endnotesPart.notes, x => x.id);
+        }
+        if (document.settingsPart) {
+            this.defaultTabSize = document.settingsPart.settings?.defaultTabStop;
+        }
+        if (!options.ignoreFonts && document.fontTablePart)
+            this.renderFontTable(document.fontTablePart, styleContainer);
+        var sectionElements = this.renderSections(document.documentPart.body);
+        if (this.options.inWrapper) {
+            if (this.options.renderOutline) {
+                bodyContainer.appendChild(this.renderOutlineWrapper(this.renderWrapper(sectionElements)));
+            }
+            else {
+                bodyContainer.appendChild(this.renderWrapper(sectionElements));
+            }
+        }
+        else {
+            appendChildren(bodyContainer, sectionElements);
+        }
+        this.refreshTabStops();
+    }
+    renderTheme(themePart, styleContainer) {
+        const variables = {};
+        const fontScheme = themePart.theme?.fontScheme;
+        if (fontScheme) {
+            if (fontScheme.majorFont) {
+                variables['--docx-majorHAnsi-font'] = fontScheme.majorFont.latinTypeface;
+            }
+            if (fontScheme.minorFont) {
+                variables['--docx-minorHAnsi-font'] = fontScheme.minorFont.latinTypeface;
+            }
+        }
+        const colorScheme = themePart.theme?.colorScheme;
+        if (colorScheme) {
+            for (let [k, v] of Object.entries(colorScheme.colors)) {
+                variables[`--docx-${k}-color`] = `#${v}`;
+            }
+        }
+        const cssText = this.styleToString(`.${this.className}`, variables);
+        styleContainer.appendChild(createStyleElement(cssText));
+    }
+    renderFontTable(fontsPart, styleContainer) {
+        for (let f of fontsPart.fonts) {
+            for (let ref of f.embedFontRefs) {
+                this.document.loadFont(ref.id, ref.key).then(fontData => {
+                    const cssValues = {
+                        'font-family': f.name,
+                        'src': `url(${fontData})`
+                    };
+                    if (ref.type == "bold" || ref.type == "boldItalic") {
+                        cssValues['font-weight'] = 'bold';
+                    }
+                    if (ref.type == "italic" || ref.type == "boldItalic") {
+                        cssValues['font-style'] = 'italic';
+                    }
+                    appendComment(styleContainer, `docxjs ${f.name} font`);
+                    const cssText = this.styleToString("@font-face", cssValues);
+                    styleContainer.appendChild(createStyleElement(cssText));
+                    this.refreshTabStops();
+                });
+            }
+        }
+    }
+    processStyleName(className) {
+        return className ? `${this.className}_${(0, utils_1.escapeClassName)(className)}` : this.className;
+    }
+    processStyles(styles) {
+        const stylesMap = (0, utils_1.keyBy)(styles.filter(x => x.id != null), x => x.id);
+        for (const style of styles.filter(x => x.basedOn)) {
+            var baseStyle = stylesMap[style.basedOn];
+            if (baseStyle) {
+                style.paragraphProps = (0, utils_1.mergeDeep)(style.paragraphProps, baseStyle.paragraphProps);
+                style.runProps = (0, utils_1.mergeDeep)(style.runProps, baseStyle.runProps);
+                for (const baseValues of baseStyle.styles) {
+                    const styleValues = style.styles.find(x => x.target == baseValues.target);
+                    if (styleValues) {
+                        this.copyStyleProperties(baseValues.values, styleValues.values);
+                    }
+                    else {
+                        style.styles.push({ ...baseValues, values: { ...baseValues.values } });
+                    }
+                }
+            }
+            else if (this.options.debug)
+                console.warn(`Can't find base style ${style.basedOn}`);
+        }
+        for (let style of styles) {
+            style.cssName = this.processStyleName(style.id);
+        }
+        return stylesMap;
+    }
+    prodessNumberings(numberings) {
+        for (let num of numberings.filter(n => n.pStyleName)) {
+            const style = this.findStyle(num.pStyleName);
+            if (style?.paragraphProps?.numbering) {
+                style.paragraphProps.numbering.level = num.level;
+            }
+        }
+    }
+    processElement(element) {
+        if (element.children) {
+            for (var e of element.children) {
+                e.parent = element;
+                if (e.type == dom_1.DomType.Table) {
+                    this.processTable(e);
+                }
+                else {
+                    this.processElement(e);
+                }
+            }
+        }
+    }
+    processTable(table) {
+        for (var r of table.children) {
+            for (var c of r.children) {
+                c.cssStyle = this.copyStyleProperties(table.cellStyle, c.cssStyle, [
+                    "border-left", "border-right", "border-top", "border-bottom",
+                    "padding-left", "padding-right", "padding-top", "padding-bottom"
+                ]);
+                this.processElement(c);
+            }
+        }
+    }
+    copyStyleProperties(input, output, attrs = null) {
+        if (!input)
+            return output;
+        if (output == null)
+            output = {};
+        if (attrs == null)
+            attrs = Object.getOwnPropertyNames(input);
+        for (var key of attrs) {
+            if (input.hasOwnProperty(key) && !output.hasOwnProperty(key))
+                output[key] = input[key];
+        }
+        return output;
+    }
+    createSection(className, props) {
+        var elem = this.createElement("section", { className });
+        if (props) {
+            if (props.pageMargins) {
+                elem.style.paddingLeft = props.pageMargins.left;
+                elem.style.paddingRight = props.pageMargins.right;
+                elem.style.paddingTop = props.pageMargins.top;
+                elem.style.paddingBottom = props.pageMargins.bottom;
+            }
+            if (props.pageSize) {
+                if (!this.options.ignoreWidth)
+                    elem.style.width = props.pageSize.width;
+                if (!this.options.ignoreHeight)
+                    elem.style.minHeight = props.pageSize.height;
+            }
+            if (props.columns && props.columns.numberOfColumns) {
+                elem.style.columnCount = `${props.columns.numberOfColumns}`;
+                elem.style.columnGap = props.columns.space;
+                if (props.columns.separator) {
+                    elem.style.columnRule = "1px solid black";
+                }
+            }
+        }
+        return elem;
+    }
+    renderSections(document) {
+        const result = [];
+        this.processElement(document);
+        const sections = this.splitBySection(document.children);
+        let prevProps = null;
+        for (let i = 0, l = sections.length; i < l; i++) {
+            this.currentFootnoteIds = [];
+            const section = sections[i];
+            const props = section.sectProps || document.props;
+            const sectionElement = this.createSection(this.className, props);
+            this.renderStyleValues(document.cssStyle, sectionElement);
+            this.options.renderHeaders && this.renderHeaderFooter(props.headerRefs, props, result.length, prevProps != props, sectionElement);
+            var contentElement = this.createElement("article");
+            this.renderElements(section.elements, contentElement);
+            sectionElement.appendChild(contentElement);
+            if (this.options.renderFootnotes) {
+                this.renderNotes(this.currentFootnoteIds, this.footnoteMap, sectionElement);
+            }
+            if (this.options.renderEndnotes && i == l - 1) {
+                this.renderNotes(this.currentEndnoteIds, this.endnoteMap, sectionElement);
+            }
+            this.options.renderFooters && this.renderHeaderFooter(props.footerRefs, props, result.length, prevProps != props, sectionElement);
+            result.push(sectionElement);
+            prevProps = props;
+        }
+        return result;
+    }
+    renderHeaderFooter(refs, props, page, firstOfSection, into) {
+        if (!refs)
+            return;
+        var ref = (props.titlePage && firstOfSection ? refs.find(x => x.type == "first") : null)
+            ?? (page % 2 == 1 ? refs.find(x => x.type == "even") : null)
+            ?? refs.find(x => x.type == "default");
+        var part = ref && this.document.findPartByRelId(ref.id, this.document.documentPart);
+        if (part) {
+            this.currentPart = part;
+            if (!this.usedHederFooterParts.includes(part.path)) {
+                this.processElement(part.rootElement);
+                this.usedHederFooterParts.push(part.path);
+            }
+            this.renderElements([part.rootElement], into);
+            this.currentPart = null;
+        }
+    }
+    isPageBreakElement(elem) {
+        if (elem.type != dom_1.DomType.Break)
+            return false;
+        if (elem.break == "lastRenderedPageBreak")
+            return !this.options.ignoreLastRenderedPageBreak;
+        return elem.break == "page";
+    }
+    splitBySection(elements) {
+        var current = { sectProps: null, elements: [] };
+        var result = [current];
+        for (let elem of elements) {
+            if (elem.type == dom_1.DomType.Paragraph) {
+                const s = this.findStyle(elem.styleName);
+                if (s?.paragraphProps?.pageBreakBefore) {
+                    current.sectProps = sectProps;
+                    current = { sectProps: null, elements: [] };
+                    result.push(current);
+                }
+            }
+            current.elements.push(elem);
+            if (elem.type == dom_1.DomType.Paragraph) {
+                const p = elem;
+                var sectProps = p.sectionProps;
+                var pBreakIndex = -1;
+                var rBreakIndex = -1;
+                if (this.options.breakPages && p.children) {
+                    pBreakIndex = p.children.findIndex(r => {
+                        rBreakIndex = r.children?.findIndex(this.isPageBreakElement.bind(this)) ?? -1;
+                        return rBreakIndex != -1;
+                    });
+                }
+                if (sectProps || pBreakIndex != -1) {
+                    current.sectProps = sectProps;
+                    current = { sectProps: null, elements: [] };
+                    result.push(current);
+                }
+                if (pBreakIndex != -1 && pBreakIndex != 0) {
+                    let breakRun = p.children[pBreakIndex];
+                    let splitRun = false;
+                    if (pBreakIndex < p.children.length - 1 || splitRun) {
+                        var children = elem.children;
+                        var newParagraph = { ...elem, children: children.slice(pBreakIndex) };
+                        elem.children = children.slice(0, pBreakIndex);
+                        newParagraph.noRenderNumbering = true;
+                        current.elements.push(newParagraph);
+                        if (splitRun) {
+                            let runChildren = breakRun.children;
+                            let newRun = { ...breakRun, children: runChildren.slice(0, rBreakIndex) };
+                            elem.children.push(newRun);
+                            breakRun.children = runChildren.slice(rBreakIndex);
+                            console.log(breakRun);
+                        }
+                    }
+                }
+            }
+        }
+        let currentSectProps = null;
+        for (let i = result.length - 1; i >= 0; i--) {
+            if (result[i].sectProps == null) {
+                result[i].sectProps = currentSectProps;
+            }
+            else {
+                currentSectProps = result[i].sectProps;
+            }
+        }
+        return result;
+    }
+    renderWrapper(children) {
+        return this.createElement("div", { className: `${this.className}-wrapper` }, children);
+    }
+    renderOutlineWrapper(child) {
+        let outline = this.createOutlineElement();
+        let outlineWrapper = this.createElement("div", { className: `${this.className}-outline-wrapper` }, [outline, child]);
+        return outlineWrapper;
+    }
+    createOutlineElement() {
+        let outlineContainer = this.createElement("div", { className: `${this.className}-outline-container` });
+        let outlineContent = this.createElement("div", { className: `${this.className}-outline-content` });
+        let pArr = this.document.documentPart?.body?.children;
+        for (let p of pArr) {
+            if (!isNaN(Number(p.styleName)) && Number(p.styleName) !== 0) {
+                let ref;
+                for (let child of p.children || []) {
+                    if (child.type === "bookmarkStart" || child.type === "bookmarkEnd") {
+                        let c = child;
+                        ref = c.name;
+                        break;
+                    }
+                }
+                let result = this.createElement("p");
+                result.style.marginLeft = `${16 * Number(p.styleName)}px`;
+                this.renderChildren(p, result);
+                result.addEventListener("click", function () {
+                    let wrap = document.getElementsByClassName("docx-wrapper")[0];
+                    let anchor = wrap.querySelector(`#${ref}`);
+                    anchor?.scrollIntoView(true);
+                });
+                outlineContent.appendChild(result);
+            }
+        }
+        outlineContainer.appendChild(outlineContent);
+        return outlineContainer;
+    }
+    renderDefaultStyle() {
+        var c = this.className;
+        var styleText = `
+.${c}-wrapper { background: gray; padding: 30px; padding-bottom: 0px; display: flex; flex-flow: column; align-items: center; flex: 1; } 
+.${c}-outline-wrapper { background: gray; display: flex; }
+.${c}-outline-container { background: white; width: 300px; height: 100vh; }
+.${c}-outline-content { background: white; width: 300px; height: 100vh; overflow: auto; position: fixed; top: 0; padding: 10px; }
+.${c}-outline-content > p { text-align: left; width: 240px; margin-top: 3px; margin-bottom: 3px; margin-right: 30px; cursor: pointer; }
+.${c}-outline-content > p > span { font-size: 12px !important; }
+.${c}-wrapper>section.${c} { background: white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); margin-bottom: 30px; }
+.${c} { color: black; hyphens: auto; }
+section.${c} { box-sizing: border-box; display: flex; flex-flow: column nowrap; position: relative; overflow: hidden; }
+section.${c}>article { margin-bottom: auto; z-index: 1; }
+section.${c}>footer { z-index: 1; }
+.${c} table { border-collapse: collapse; }
+.${c} table td, .${c} table th { vertical-align: top; }
+.${c} p { margin: 0pt; min-height: 1em; }
+.${c} span { white-space: pre-wrap; overflow-wrap: break-word; }
+.${c} a { color: inherit; text-decoration: inherit; }
+`;
+        return createStyleElement(styleText);
+    }
+    renderNumbering(numberings, styleContainer) {
+        var styleText = "";
+        var resetCounters = [];
+        for (var num of numberings) {
+            var selector = `p.${this.numberingClass(num.id, num.level)}`;
+            var listStyleType = "none";
+            if (num.bullet) {
+                let valiable = `--${this.className}-${num.bullet.src}`.toLowerCase();
+                styleText += this.styleToString(`${selector}:before`, {
+                    "content": "' '",
+                    "display": "inline-block",
+                    "background": `var(${valiable})`
+                }, num.bullet.style);
+                this.document.loadNumberingImage(num.bullet.src).then(data => {
+                    var text = `${this.rootSelector} { ${valiable}: url(${data}) }`;
+                    styleContainer.appendChild(createStyleElement(text));
+                });
+            }
+            else if (num.levelText) {
+                let counter = this.numberingCounter(num.id, num.level);
+                const counterReset = counter + " " + (num.start - 1);
+                if (num.level > 0) {
+                    styleText += this.styleToString(`p.${this.numberingClass(num.id, num.level - 1)}`, {
+                        "counter-reset": counterReset
+                    });
+                }
+                resetCounters.push(counterReset);
+                styleText += this.styleToString(`${selector}:before`, {
+                    "content": this.levelTextToContent(num.levelText, num.suff, num.id, this.numFormatToCssValue(num.format)),
+                    "counter-increment": counter,
+                    ...num.rStyle,
+                });
+            }
+            else {
+                listStyleType = this.numFormatToCssValue(num.format);
+            }
+            styleText += this.styleToString(selector, {
+                "display": "list-item",
+                "list-style-position": "inside",
+                "list-style-type": listStyleType,
+                ...num.pStyle
+            });
+        }
+        if (resetCounters.length > 0) {
+            styleText += this.styleToString(this.rootSelector, {
+                "counter-reset": resetCounters.join(" ")
+            });
+        }
+        return createStyleElement(styleText);
+    }
+    renderTitleNumbering(pArr, domNumberings, styleContainer) {
+        let styleText = "";
+        let resetCounters = [];
+        for (let p of pArr) {
+            if (!isNaN(Number(p.styleName)) && Number(p.styleName) !== 0 && p?.numbering?.id !== '0') {
+                let titleLevel = p.styleName;
+                const style = this.findStyle(p.styleName);
+                let numbering = p.numbering;
+                if (numbering && numbering.level !== undefined && numbering.level !== null && (numbering.level > (Number(titleLevel) - 1))) {
+                    titleLevel = numbering.level;
+                }
+                else {
+                    titleLevel = Number(titleLevel - 1);
+                }
+                numbering = numbering ?? style?.paragraphProps?.numbering;
+                let currentDomNumbering = domNumberings.find(item => {
+                    return item.numId === numbering.id && item.level === numbering.level;
+                });
+                let selector = `p.${this.numberingTitleClass(titleLevel)}`;
+                let listStyleType = "none";
+                if (currentDomNumbering.bullet) {
+                    let valiable = `--${this.className}-${currentDomNumbering.bullet.src}`.toLowerCase();
+                    styleText += this.styleToString(`${selector}:before`, {
+                        "content": "' '",
+                        "display": "inline-block",
+                        "background": `var(${valiable})`
+                    }, currentDomNumbering.bullet.style);
+                    this.document.loadNumberingImage(currentDomNumbering.bullet.src).then(data => {
+                        var text = `${this.rootSelector} { ${valiable}: url(${data}) }`;
+                        styleContainer.appendChild(createStyleElement(text));
+                    });
+                }
+                else if (currentDomNumbering.levelText) {
+                    let counter = this.numberingTitleCounter(titleLevel);
+                    const counterReset = counter + " " + 0;
+                    if (Number(titleLevel) > 0) {
+                        styleText += this.styleToString(`p.${this.numberingTitleClass(Number(titleLevel) - 1)}`, {
+                            "counter-reset": counterReset
+                        });
+                    }
+                    resetCounters.push(counterReset);
+                    styleText += this.styleToString(`${selector}:before`, {
+                        "content": this.levelTextToContentOfTitle(currentDomNumbering.levelText, currentDomNumbering.suff, this.numFormatToCssValue(currentDomNumbering.format)),
+                        "counter-increment": counter,
+                        ...currentDomNumbering.rStyle,
+                    });
+                }
+                else {
+                    listStyleType = this.numFormatToCssValue(currentDomNumbering.format);
+                }
+                styleText += this.styleToString(selector, {
+                    "display": "list-item",
+                    "list-style-position": "inside",
+                    "list-style-type": listStyleType,
+                    ...currentDomNumbering.pStyle
+                });
+            }
+        }
+        for (var num of domNumberings) {
+            var selector = `p.${this.numberingClass(num.id, num.level)}`;
+            var listStyleType = "none";
+            if (num.bullet) {
+                let valiable = `--${this.className}-${num.bullet.src}`.toLowerCase();
+                styleText += this.styleToString(`${selector}:before`, {
+                    "content": "' '",
+                    "display": "inline-block",
+                    "background": `var(${valiable})`
+                }, num.bullet.style);
+                this.document.loadNumberingImage(num.bullet.src).then(data => {
+                    var text = `${this.rootSelector} { ${valiable}: url(${data}) }`;
+                    styleContainer.appendChild(createStyleElement(text));
+                });
+            }
+            else if (num.levelText) {
+                let counter = this.numberingCounter(num.id, num.level);
+                const counterReset = counter + " " + (num.start - 1);
+                if (num.level > 0) {
+                    styleText += this.styleToString(`p.${this.numberingClass(num.id, num.level - 1)}`, {
+                        "counter-reset": counterReset
+                    });
+                }
+                resetCounters.push(counterReset);
+                styleText += this.styleToString(`${selector}:before`, {
+                    "content": this.levelTextToContent(num.levelText, num.suff, num.id, this.numFormatToCssValue(num.format)),
+                    "counter-increment": counter,
+                    ...num.rStyle,
+                });
+            }
+            else {
+                listStyleType = this.numFormatToCssValue(num.format);
+            }
+            styleText += this.styleToString(selector, {
+                "display": "list-item",
+                "list-style-position": "inside",
+                "list-style-type": listStyleType,
+                ...num.pStyle
+            });
+        }
+        if (resetCounters.length > 0) {
+            styleText += this.styleToString(this.rootSelector, {
+                "counter-reset": resetCounters.join(" ")
+            });
+        }
+        return createStyleElement(styleText);
+    }
+    renderMyNumbering(numberings, overNumberings, styleContainer) {
+        var styleText = "";
+        var resetCounters = [];
+        for (var num of numberings) {
+            var selector = `p.${this.numberingClass(num.id, num.level)}`;
+            var listStyleType = "none";
+            if (num.bullet) {
+                let valiable = `--${this.className}-${num.bullet.src}`.toLowerCase();
+                styleText += this.styleToString(`${selector}:before`, {
+                    "content": "' '",
+                    "display": "inline-block",
+                    "background": `var(${valiable})`
+                }, num.bullet.style);
+                this.document.loadNumberingImage(num.bullet.src).then(data => {
+                    var text = `${this.rootSelector} { ${valiable}: url(${data}) }`;
+                    styleContainer.appendChild(createStyleElement(text));
+                });
+            }
+            else if (num.levelText) {
+                let counter = this.numberingCounter(num.id, num.level);
+                const counterReset = counter + " " + (num.start - 1);
+                if (num.level > 0) {
+                    styleText += this.styleToString(`p.${this.numberingClass(num.id, num.level - 1)}`, {
+                        "counter-reset": counterReset
+                    });
+                }
+                resetCounters.push(counterReset);
+                styleText += this.styleToString(`${selector}:before`, {
+                    "content": this.levelTextToContent(num.levelText, num.suff, num.id, this.numFormatToCssValue(num.format)),
+                    "counter-increment": counter,
+                    ...num.rStyle,
+                });
+            }
+            else {
+                listStyleType = this.numFormatToCssValue(num.format);
+            }
+            styleText += this.styleToString(selector, {
+                "display": "list-item",
+                "list-style-position": "inside",
+                "list-style-type": listStyleType,
+                ...num.pStyle
+            });
+        }
+        if (resetCounters.length > 0) {
+            styleText += this.styleToString(this.rootSelector, {
+                "counter-reset": resetCounters.join(" ")
+            });
+        }
+        return createStyleElement(styleText);
+    }
+    renderStyles(styles) {
+        var styleText = "";
+        const stylesMap = this.styleMap;
+        const defautStyles = (0, utils_1.keyBy)(styles.filter(s => s.isDefault), s => s.target);
+        for (const style of styles) {
+            var subStyles = style.styles;
+            if (style.linked) {
+                var linkedStyle = style.linked && stylesMap[style.linked];
+                if (linkedStyle)
+                    subStyles = subStyles.concat(linkedStyle.styles);
+                else if (this.options.debug)
+                    console.warn(`Can't find linked style ${style.linked}`);
+            }
+            for (const subStyle of subStyles) {
+                var selector = `${style.target ?? ''}.${style.cssName}`;
+                if (style.target != subStyle.target)
+                    selector += ` ${subStyle.target}`;
+                if (defautStyles[style.target] == style)
+                    selector = `.${this.className} ${style.target}, ` + selector;
+                styleText += this.styleToString(selector, subStyle.values);
+            }
+        }
+        return createStyleElement(styleText);
+    }
+    renderNotes(noteIds, notesMap, into) {
+        var notes = noteIds.map(id => notesMap[id]).filter(x => x);
+        if (notes.length > 0) {
+            var result = this.createElement("ol", null, this.renderElements(notes));
+            into.appendChild(result);
+        }
+    }
+    renderElement(elem) {
+        switch (elem.type) {
+            case dom_1.DomType.Paragraph:
+                return this.renderParagraph(elem);
+            case dom_1.DomType.BookmarkStart:
+                return this.renderBookmarkStart(elem);
+            case dom_1.DomType.BookmarkEnd:
+                return null;
+            case dom_1.DomType.Run:
+                return this.renderRun(elem);
+            case dom_1.DomType.Table:
+                return this.renderTable(elem);
+            case dom_1.DomType.Row:
+                return this.renderTableRow(elem);
+            case dom_1.DomType.Cell:
+                return this.renderTableCell(elem);
+            case dom_1.DomType.Hyperlink:
+                return this.renderHyperlink(elem);
+            case dom_1.DomType.Drawing:
+                return this.renderDrawing(elem);
+            case dom_1.DomType.Image:
+                return this.renderImage(elem);
+            case dom_1.DomType.Text:
+                return this.renderText(elem);
+            case dom_1.DomType.Text:
+                return this.renderText(elem);
+            case dom_1.DomType.DeletedText:
+                return this.renderDeletedText(elem);
+            case dom_1.DomType.Tab:
+                return this.renderTab(elem);
+            case dom_1.DomType.Symbol:
+                return this.renderSymbol(elem);
+            case dom_1.DomType.Break:
+                return this.renderBreak(elem);
+            case dom_1.DomType.Footer:
+                return this.renderContainer(elem, "footer");
+            case dom_1.DomType.Header:
+                return this.renderContainer(elem, "header");
+            case dom_1.DomType.Footnote:
+            case dom_1.DomType.Endnote:
+                let li = this.renderContainer(elem, "li");
+                li.style.fontSize = "10pt";
+                return li;
+            case dom_1.DomType.FootnoteReference:
+                return this.renderFootnoteReference(elem);
+            case dom_1.DomType.EndnoteReference:
+                return this.renderEndnoteReference(elem);
+            case dom_1.DomType.NoBreakHyphen:
+                return this.createElement("wbr");
+            case dom_1.DomType.VmlPicture:
+                return this.renderVmlPicture(elem);
+            case dom_1.DomType.VmlElement:
+                return this.renderVmlElement(elem);
+            case dom_1.DomType.MmlMath:
+                return this.renderContainerNS(elem, ns.mathML, "math", { xmlns: ns.mathML });
+            case dom_1.DomType.MmlMathParagraph:
+                return this.renderContainer(elem, "span");
+            case dom_1.DomType.MmlFraction:
+                return this.renderContainerNS(elem, ns.mathML, "mfrac");
+            case dom_1.DomType.MmlBase:
+                return this.renderContainerNS(elem, ns.mathML, elem.parent.type == dom_1.DomType.MmlMatrixRow ? "mtd" : "mrow");
+            case dom_1.DomType.MmlNumerator:
+            case dom_1.DomType.MmlDenominator:
+            case dom_1.DomType.MmlFunction:
+            case dom_1.DomType.MmlLimit:
+            case dom_1.DomType.MmlBox:
+                return this.renderContainerNS(elem, ns.mathML, "mrow");
+            case dom_1.DomType.MmlGroupChar:
+                return this.renderMmlGroupChar(elem);
+            case dom_1.DomType.MmlLimitLower:
+                return this.renderContainerNS(elem, ns.mathML, "munder");
+            case dom_1.DomType.MmlMatrix:
+                return this.renderContainerNS(elem, ns.mathML, "mtable");
+            case dom_1.DomType.MmlMatrixRow:
+                return this.renderContainerNS(elem, ns.mathML, "mtr");
+            case dom_1.DomType.MmlRadical:
+                return this.renderMmlRadical(elem);
+            case dom_1.DomType.MmlSuperscript:
+                return this.renderContainerNS(elem, ns.mathML, "msup");
+            case dom_1.DomType.MmlSubscript:
+                return this.renderContainerNS(elem, ns.mathML, "msub");
+            case dom_1.DomType.MmlDegree:
+            case dom_1.DomType.MmlSuperArgument:
+            case dom_1.DomType.MmlSubArgument:
+                return this.renderContainerNS(elem, ns.mathML, "mn");
+            case dom_1.DomType.MmlFunctionName:
+                return this.renderContainerNS(elem, ns.mathML, "ms");
+            case dom_1.DomType.MmlDelimiter:
+                return this.renderMmlDelimiter(elem);
+            case dom_1.DomType.MmlRun:
+                return this.renderMmlRun(elem);
+            case dom_1.DomType.MmlNary:
+                return this.renderMmlNary(elem);
+            case dom_1.DomType.MmlPreSubSuper:
+                return this.renderMmlPreSubSuper(elem);
+            case dom_1.DomType.MmlBar:
+                return this.renderMmlBar(elem);
+            case dom_1.DomType.MmlEquationArray:
+                return this.renderMllList(elem);
+            case dom_1.DomType.Inserted:
+                return this.renderInserted(elem);
+            case dom_1.DomType.Deleted:
+                return this.renderDeleted(elem);
+            case dom_1.DomType.CommentRangeEnd:
+                return this.renderCommentReference(elem);
+        }
+        return null;
+    }
+    renderFieldRun(elem) {
+        for (let child of elem.children ?? []) {
+            switch (child.type) {
+                case dom_1.DomType.Instruction:
+                    return this.renderInstrText(child);
+            }
+            return null;
+        }
+        return null;
+    }
+    renderInstrText(elem) {
+        let text = elem.text;
+        if (text.split(' ')[0] === "REF") {
+            let id = Math.random();
+            elem.instrTextId = id;
+            let result = this.createElement("span");
+            let paragraph = elem.parent?.parent;
+            let textArr = [];
+            let rArr = paragraph?.children || [];
+            let index = rArr?.findIndex(item => {
+                let rChildren = item.children;
+                let c = rChildren?.find(c => {
+                    return c?.instrTextId === id;
+                });
+                if (c !== undefined)
+                    return true;
+                return false;
+            });
+            for (let i = index; i < rArr?.length || 0; i++) {
+                let rChildren = rArr?.[i]?.children;
+                let child = rChildren?.find(c => {
+                    return c?.type === 'complexField' && c?.charType === 'end';
+                });
+                if (child === undefined) {
+                    if (rArr?.[i].fieldRun !== true) {
+                        textArr.push(rArr?.[i]);
+                        if (rArr?.[i] !== undefined) {
+                            rArr[i].fieldRun = true;
+                        }
+                    }
+                }
+                else {
+                    break;
+                }
+            }
+            result.textContent = this.joinRangeText(textArr.reverse());
+            result.style.cursor = "pointer";
+            result.addEventListener("click", function () {
+                let ref = text.split(' ')[1];
+                let wrap = document.getElementsByClassName("docx-wrapper")[0];
+                let anchor = wrap.querySelector(`#${ref}`);
+                anchor?.scrollIntoView(false);
+            });
+            return result;
+        }
+        return null;
+    }
+    renderCommentReference(elem) {
+        if (!elem.noRender && this.options.renderComments) {
+            let supNode = this.createCommentSupNode();
+            supNode.addEventListener("click", () => {
+                let children = this.createCommentContentNode(elem);
+                (0, popover_js_1.default)(elem.paraId, supNode, children);
+            });
+            return supNode;
+        }
+        return null;
+    }
+    createCommentContentNode(elem) {
+        let commentsContainer = this.createElement("div");
+        let msgContainer = this.createElement("div");
+        msgContainer.textContent = elem.msg;
+        msgContainer.style.textOverflow = "ellipsis";
+        msgContainer.style.whiteSpace = "nowrap";
+        msgContainer.style.overflow = "hidden";
+        msgContainer.style.paddingLeft = "5px";
+        msgContainer.style.borderLeft = "2px solid #bbbfc4";
+        msgContainer.style.width = "300px";
+        msgContainer.style.fontSize = "14px";
+        msgContainer.style.color = "#646a73";
+        msgContainer.title = elem.msg;
+        let commentContainer = this.createCommentNode(elem);
+        commentsContainer.appendChild(msgContainer);
+        commentsContainer.appendChild(commentContainer);
+        return commentsContainer;
+    }
+    createCommentNode(elem) {
+        let commentContainer = this.createElement("div");
+        let author = this.createElement("span");
+        author.style.marginRight = "10px";
+        author.style.fontSize = "13px";
+        author.textContent = elem.author;
+        let date = this.createElement("span");
+        date.style.fontSize = "13px";
+        date.textContent = elem.date?.replace('T', ' ')?.replace('Z', '');
+        let text = this.createElement("div");
+        text.style.width = "200px";
+        text.style.margin = "3px 0 5px";
+        text.style.fontSize = "14px";
+        text.textContent = elem.text;
+        commentContainer.appendChild(author);
+        commentContainer.appendChild(date);
+        commentContainer.appendChild(text);
+        if (elem?.children?.length > 0) {
+            let childCommentContainer = this.createElement("div");
+            childCommentContainer.style.borderLeft = "2px solid #bbbfc4";
+            childCommentContainer.style.paddingLeft = "7px";
+            childCommentContainer.style.marginLeft = "20px";
+            for (let i = 0; i < elem?.children?.length; i++) {
+                childCommentContainer.appendChild(this.createCommentNode(elem?.children?.[i]));
+            }
+            commentContainer.appendChild(childCommentContainer);
+        }
+        return commentContainer;
+    }
+    createCommentSupNode() {
+        let elem = this.createElement("sup");
+        let img = this.createElement("img");
+        img.src = assets_1.commentPng;
+        img.style.width = "10pt";
+        img.style.height = "10pt";
+        img.style.cursor = "pointer";
+        elem.appendChild(img);
+        elem.style.padding = "0 0 0 2pt";
+        return elem;
+    }
+    renderChildren(elem, into) {
+        return this.renderElements(elem.children, into);
+    }
+    renderElements(elems, into) {
+        if (elems == null)
+            return null;
+        var result = elems.flatMap(e => this.renderElement(e)).filter(e => e != null);
+        if (into)
+            appendChildren(into, result);
+        return result;
+    }
+    renderContainer(elem, tagName, props) {
+        return this.createElement(tagName, props, this.renderChildren(elem));
+    }
+    renderContainerNS(elem, ns, tagName, props) {
+        return createElementNS(ns, tagName, props, this.renderChildren(elem));
+    }
+    renderParagraph(elem) {
+        var result = this.createElement("p");
+        const style = this.findStyle(elem.styleName);
+        elem.tabs ?? (elem.tabs = style?.paragraphProps?.tabs);
+        this.renderClass(elem, result);
+        this.renderChildren(elem, result);
+        this.renderStyleValues(elem.cssStyle, result);
+        this.renderCommonProperties(result.style, elem);
+        if (!isNaN(Number(elem.styleName)) && Number(elem.styleName) !== 0 && elem?.numbering?.id !== '0') {
+            let titleLevel = elem.styleName;
+            if (elem.numbering && elem.numbering.level !== undefined && elem.numbering.level !== null && (elem.numbering.level > (Number(titleLevel) - 1))) {
+                titleLevel = `${elem.numbering.level}`;
+            }
+            else {
+                titleLevel = `${(Number(titleLevel) - 1)}`;
+            }
+            result.classList.add(this.numberingTitleClass(Number(titleLevel)));
+            return result;
+        }
+        const numbering = elem.numbering ?? style?.paragraphProps?.numbering;
+        if (numbering && !elem.noRenderNumbering) {
+            let numberingPart = this.document.numberingPart.numberings;
+            let currentNumbering = numberingPart.find(item => {
+                return item.id === numbering.id;
+            });
+            result.classList.add(this.numberingClass(currentNumbering?.abstractId, numbering.level));
+            let currentOverride = currentNumbering?.overrides?.find(item => { return item.level === numbering.level; });
+            if (currentOverride) {
+                let overrideCounter = this.numberingCounter(currentNumbering?.abstractId, numbering.level);
+                console.log(overrideCounter);
+                let overrideCounterReset = overrideCounter + " " + (currentOverride.start ? currentOverride.start - 1 : 0);
+                result.style.counterReset = overrideCounterReset;
+            }
+        }
+        return result;
+    }
+    renderRunProperties(style, props) {
+        this.renderCommonProperties(style, props);
+    }
+    renderCommonProperties(style, props) {
+        if (props == null)
+            return;
+        if (props.color) {
+            style["color"] = props.color;
+        }
+        if (props.fontSize) {
+            style["font-size"] = props.fontSize;
+        }
+    }
+    renderHyperlink(elem) {
+        var result = this.createElement("a");
+        this.renderChildren(elem, result);
+        this.renderStyleValues(elem.cssStyle, result);
+        if (elem.href) {
+            result.style.cursor = "pointer";
+            result.addEventListener("click", function (e) {
+                let wrap = document.getElementsByClassName("docx-wrapper")[0];
+                let anchor = wrap.querySelector(`#${elem?.href?.replace("#", '')}`);
+                anchor?.scrollIntoView();
+            });
+        }
+        else if (elem.id) {
+            const rel = this.document.documentPart.rels
+                .find(it => it.id == elem.id && it.targetMode === "External");
+            result.href = rel?.target;
+        }
+        return result;
+    }
+    renderDrawing(elem) {
+        var result = this.createElement("div");
+        result.style.display = "inline-block";
+        result.style.position = "relative";
+        result.style.textIndent = "0px";
+        this.renderChildren(elem, result);
+        this.renderStyleValues(elem.cssStyle, result);
+        return result;
+    }
+    renderImage(elem) {
+        let result = this.createElement("img");
+        this.renderStyleValues(elem.cssStyle, result);
+        if (this.document) {
+            this.document.loadDocumentImage(elem.src, this.currentPart).then(x => {
+                result.src = x;
+            });
+        }
+        return result;
+    }
+    renderText(elem) {
+        return this.htmlDocument.createTextNode(elem.text);
+    }
+    renderDeletedText(elem) {
+        return this.options.renderEndnotes ? this.htmlDocument.createTextNode(elem.text) : null;
+    }
+    renderBreak(elem) {
+        if (elem.break == "textWrapping") {
+            return this.createElement("br");
+        }
+        return null;
+    }
+    renderInserted(elem) {
+        if (this.options.renderChanges)
+            return this.renderContainer(elem, "ins");
+        return this.renderChildren(elem);
+    }
+    renderDeleted(elem) {
+        if (this.options.renderChanges)
+            return this.renderContainer(elem, "del");
+        return null;
+    }
+    renderSymbol(elem) {
+        var span = this.createElement("span");
+        span.style.fontFamily = elem.font;
+        span.innerHTML = `&#x${elem.char};`;
+        return span;
+    }
+    renderFootnoteReference(elem) {
+        var result = this.createElement("sup");
+        this.currentFootnoteIds.push(elem.id);
+        result.textContent = `${this.currentFootnoteIds.length}`;
+        let notes = this.document?.footnotesPart?.notes;
+        result.title = this.renderNotePreview(elem.id, notes);
+        return result;
+    }
+    renderEndnoteReference(elem) {
+        var result = this.createElement("sup");
+        this.currentEndnoteIds.push(elem.id);
+        result.textContent = `${this.currentFootnoteIds.length}`;
+        let notes = this.document?.endnotesPart?.notes;
+        result.title = this.renderNotePreview(elem.id, notes);
+        return result;
+    }
+    renderNotePreview(id, notes) {
+        let note = notes.find(item => {
+            return item.id === id;
+        });
+        if (note) {
+            let rArr = [];
+            let pArr = note.children;
+            for (let p of pArr) {
+                rArr = rArr.concat(p?.children || []);
+            }
+            let result = this.joinRangeText(rArr.reverse());
+            return result;
+        }
+        return '';
+    }
+    renderTab(elem) {
+        var tabSpan = this.createElement("span");
+        tabSpan.innerHTML = "&emsp;";
+        if (this.options.experimental) {
+            tabSpan.className = this.tabStopClass();
+            var stops = findParent(elem, dom_1.DomType.Paragraph)?.tabs;
+            this.currentTabs.push({ stops, span: tabSpan });
+        }
+        return tabSpan;
+    }
+    renderBookmarkStart(elem) {
+        var result = this.createElement("span");
+        result.id = elem.name;
+        return result;
+    }
+    renderRun(elem) {
+        if (elem.fieldRun)
+            return this.renderFieldRun(elem);
+        const result = this.createElement("span");
+        if (elem.id)
+            result.id = elem.id;
+        this.renderClass(elem, result);
+        this.renderStyleValues(elem.cssStyle, result);
+        if (elem.verticalAlign) {
+            const wrapper = this.createElement(elem.verticalAlign);
+            this.renderChildren(elem, wrapper);
+            result.appendChild(wrapper);
+        }
+        else {
+            this.renderChildren(elem, result);
+        }
+        return result;
+    }
+    renderTable(elem) {
+        let result = this.createElement("table");
+        this.tableCellPositions.push(this.currentCellPosition);
+        this.tableVerticalMerges.push(this.currentVerticalMerge);
+        this.currentVerticalMerge = {};
+        this.currentCellPosition = { col: 0, row: 0 };
+        if (elem.columns)
+            result.appendChild(this.renderTableColumns(elem.columns));
+        this.renderClass(elem, result);
+        this.renderChildren(elem, result);
+        let tblpXSpec = elem.cssStyle?.tblpXSpec;
+        if (tblpXSpec === 'center') {
+            let num = parseFloat(elem.cssStyle?.width || '0');
+            let unit = elem.cssStyle?.width.replace(/[0-9]*/g, '').replace(/\./, '');
+            let left = ((100 - Number(num)) / 2).toFixed(2);
+            elem.cssStyle['margin-left'] = `${left}${unit}`;
+        }
+        else if (tblpXSpec) {
+            elem.cssStyle.float = tblpXSpec;
+        }
+        this.renderStyleValues(elem.cssStyle, result);
+        this.currentVerticalMerge = this.tableVerticalMerges.pop();
+        this.currentCellPosition = this.tableCellPositions.pop();
+        return result;
+    }
+    renderTableColumns(columns) {
+        let result = this.createElement("colgroup");
+        for (let col of columns) {
+            let colElem = this.createElement("col");
+            if (col.width)
+                colElem.style.width = col.width;
+            result.appendChild(colElem);
+        }
+        return result;
+    }
+    renderTableRow(elem) {
+        let result = this.createElement("tr");
+        this.currentCellPosition.col = 0;
+        this.renderClass(elem, result);
+        this.renderChildren(elem, result);
+        this.renderStyleValues(elem.cssStyle, result);
+        this.currentCellPosition.row++;
+        return result;
+    }
+    renderTableCell(elem) {
+        let result = this.createElement("td");
+        const key = this.currentCellPosition.col;
+        if (elem.verticalMerge) {
+            if (elem.verticalMerge == "restart") {
+                this.currentVerticalMerge[key] = result;
+                result.rowSpan = 1;
+            }
+            else if (this.currentVerticalMerge[key]) {
+                this.currentVerticalMerge[key].rowSpan += 1;
+                result.style.display = "none";
+            }
+        }
+        else {
+            this.currentVerticalMerge[key] = null;
+        }
+        this.renderClass(elem, result);
+        this.renderChildren(elem, result);
+        this.renderStyleValues(elem.cssStyle, result);
+        if (elem.span)
+            result.colSpan = elem.span;
+        this.currentCellPosition.col += result.colSpan;
+        return result;
+    }
+    renderVmlPicture(elem) {
+        var result = createElement("div");
+        this.renderChildren(elem, result);
+        return result;
+    }
+    renderVmlElement(elem) {
+        var container = createSvgElement("svg");
+        container.setAttribute("style", elem.cssStyleText);
+        const result = this.renderVmlChildElement(elem);
+        if (elem.imageHref?.id) {
+            this.document?.loadDocumentImage(elem.imageHref.id, this.currentPart)
+                .then(x => result.setAttribute("href", x));
+        }
+        container.appendChild(result);
+        requestAnimationFrame(() => {
+            const bb = container.firstElementChild.getBBox();
+            container.setAttribute("width", `${Math.ceil(bb.x + bb.width)}`);
+            container.setAttribute("height", `${Math.ceil(bb.y + bb.height)}`);
+        });
+        return container;
+    }
+    renderVmlChildElement(elem) {
+        const result = createSvgElement(elem.tagName);
+        Object.entries(elem.attrs).forEach(([k, v]) => result.setAttribute(k, v));
+        for (let child of elem.children) {
+            if (child.type == dom_1.DomType.VmlElement) {
+                result.appendChild(this.renderVmlChildElement(child));
+            }
+            else {
+                result.appendChild(...(0, utils_1.asArray)(this.renderElement(child)));
+            }
+        }
+        return result;
+    }
+    renderMmlRadical(elem) {
+        const base = elem.children.find(el => el.type == dom_1.DomType.MmlBase);
+        if (elem.props?.hideDegree) {
+            return createElementNS(ns.mathML, "msqrt", null, this.renderElements([base]));
+        }
+        const degree = elem.children.find(el => el.type == dom_1.DomType.MmlDegree);
+        return createElementNS(ns.mathML, "mroot", null, this.renderElements([base, degree]));
+    }
+    renderMmlDelimiter(elem) {
+        const children = [];
+        children.push(createElementNS(ns.mathML, "mo", null, [elem.props.beginChar ?? '(']));
+        children.push(...this.renderElements(elem.children));
+        children.push(createElementNS(ns.mathML, "mo", null, [elem.props.endChar ?? ')']));
+        return createElementNS(ns.mathML, "mrow", null, children);
+    }
+    renderMmlNary(elem) {
+        const children = [];
+        const grouped = (0, utils_1.keyBy)(elem.children, x => x.type);
+        const sup = grouped[dom_1.DomType.MmlSuperArgument];
+        const sub = grouped[dom_1.DomType.MmlSubArgument];
+        const supElem = sup ? createElementNS(ns.mathML, "mo", null, (0, utils_1.asArray)(this.renderElement(sup))) : null;
+        const subElem = sub ? createElementNS(ns.mathML, "mo", null, (0, utils_1.asArray)(this.renderElement(sub))) : null;
+        const charElem = createElementNS(ns.mathML, "mo", null, [elem.props?.char ?? '\u222B']);
+        if (supElem || subElem) {
+            children.push(createElementNS(ns.mathML, "munderover", null, [charElem, subElem, supElem]));
+        }
+        else if (supElem) {
+            children.push(createElementNS(ns.mathML, "mover", null, [charElem, supElem]));
+        }
+        else if (subElem) {
+            children.push(createElementNS(ns.mathML, "munder", null, [charElem, subElem]));
+        }
+        else {
+            children.push(charElem);
+        }
+        children.push(...this.renderElements(grouped[dom_1.DomType.MmlBase].children));
+        return createElementNS(ns.mathML, "mrow", null, children);
+    }
+    renderMmlPreSubSuper(elem) {
+        const children = [];
+        const grouped = (0, utils_1.keyBy)(elem.children, x => x.type);
+        const sup = grouped[dom_1.DomType.MmlSuperArgument];
+        const sub = grouped[dom_1.DomType.MmlSubArgument];
+        const supElem = sup ? createElementNS(ns.mathML, "mo", null, (0, utils_1.asArray)(this.renderElement(sup))) : null;
+        const subElem = sub ? createElementNS(ns.mathML, "mo", null, (0, utils_1.asArray)(this.renderElement(sub))) : null;
+        const stubElem = createElementNS(ns.mathML, "mo", null);
+        children.push(createElementNS(ns.mathML, "msubsup", null, [stubElem, subElem, supElem]));
+        children.push(...this.renderElements(grouped[dom_1.DomType.MmlBase].children));
+        return createElementNS(ns.mathML, "mrow", null, children);
+    }
+    renderMmlGroupChar(elem) {
+        const tagName = elem.props.verticalJustification === "bot" ? "mover" : "munder";
+        const result = this.renderContainerNS(elem, ns.mathML, tagName);
+        if (elem.props.char) {
+            result.appendChild(createElementNS(ns.mathML, "mo", null, [elem.props.char]));
+        }
+        return result;
+    }
+    renderMmlBar(elem) {
+        const result = this.renderContainerNS(elem, ns.mathML, "mrow");
+        switch (elem.props.position) {
+            case "top":
+                result.style.textDecoration = "overline";
+                break;
+            case "bottom":
+                result.style.textDecoration = "underline";
+                break;
+        }
+        return result;
+    }
+    renderMmlRun(elem) {
+        const result = createElementNS(ns.mathML, "ms");
+        this.renderClass(elem, result);
+        this.renderStyleValues(elem.cssStyle, result);
+        this.renderChildren(elem, result);
+        return result;
+    }
+    renderMllList(elem) {
+        const result = createElementNS(ns.mathML, "mtable");
+        this.renderClass(elem, result);
+        this.renderStyleValues(elem.cssStyle, result);
+        const childern = this.renderChildren(elem);
+        for (let child of this.renderChildren(elem)) {
+            result.appendChild(createElementNS(ns.mathML, "mtr", null, [
+                createElementNS(ns.mathML, "mtd", null, [child])
+            ]));
+        }
+        return result;
+    }
+    renderStyleValues(style, ouput) {
+        for (let k in style) {
+            if (k.startsWith("$")) {
+                ouput.setAttribute(k.slice(1), style[k]);
+            }
+            else {
+                ouput.style[k] = style[k];
+            }
+        }
+    }
+    renderClass(input, ouput) {
+        if (input.className)
+            ouput.className = input.className;
+        if (input.styleName)
+            ouput.classList.add(this.processStyleName(input.styleName));
+    }
+    findStyle(styleName) {
+        return styleName && this.styleMap?.[styleName];
+    }
+    numberingClass(id, lvl) {
+        return `${this.className}-num-${id}-${lvl}`;
+    }
+    numberingTitleClass(lvl) {
+        return `${this.className}-title-${lvl}`;
+    }
+    tabStopClass() {
+        return `${this.className}-tab-stop`;
+    }
+    styleToString(selectors, values, cssText = null) {
+        let result = `${selectors} {\r\n`;
+        for (const key in values) {
+            if (key.startsWith('$'))
+                continue;
+            result += `  ${key}: ${values[key]};\r\n`;
+        }
+        if (cssText)
+            result += cssText;
+        return result + "}\r\n";
+    }
+    numberingCounter(id, lvl) {
+        return `${this.className}-num-${id}-${lvl}`;
+    }
+    numberingTitleCounter(lvl) {
+        return `${this.className}-title-${lvl}`;
+    }
+    levelTextToContent(text, suff, id, numformat) {
+        const suffMap = {
+            "tab": "\\9",
+            "space": "\\a0",
+        };
+        var result = text.replace(/%\d*/g, s => {
+            let lvl = parseInt(s.substring(1), 10) - 1;
+            return `"counter(${this.numberingCounter(id, lvl)}, ${numformat})"`;
+        });
+        return `"${result}${suffMap[suff] ?? ""}"`;
+    }
+    levelTextToContentOfTitle(text, suff, numformat) {
+        const suffMap = {
+            "tab": "\\9",
+            "space": "\\a0",
+        };
+        var result = text.replace(/%\d*/g, s => {
+            let lvl = parseInt(s.substring(1), 10) - 1;
+            return `"counter(${this.numberingTitleCounter(lvl)}, ${numformat})"`;
+        });
+        return `"${result}${suffMap[suff] ?? ""}"`;
+    }
+    numFormatToCssValue(format) {
+        var mapping = {
+            none: "none",
+            bullet: "disc",
+            decimal: "decimal",
+            lowerLetter: "lower-alpha",
+            upperLetter: "upper-alpha",
+            lowerRoman: "lower-roman",
+            upperRoman: "upper-roman",
+            decimalZero: "decimal-leading-zero",
+            aiueo: "katakana",
+            aiueoFullWidth: "katakana",
+            chineseCounting: "simp-chinese-informal",
+            chineseCountingThousand: "simp-chinese-informal",
+            chineseLegalSimplified: "simp-chinese-formal",
+            chosung: "hangul-consonant",
+            ideographDigital: "cjk-ideographic",
+            ideographTraditional: "cjk-heavenly-stem",
+            ideographLegalTraditional: "trad-chinese-formal",
+            ideographZodiac: "cjk-earthly-branch",
+            iroha: "katakana-iroha",
+            irohaFullWidth: "katakana-iroha",
+            japaneseCounting: "japanese-informal",
+            japaneseDigitalTenThousand: "cjk-decimal",
+            japaneseLegal: "japanese-formal",
+            thaiNumbers: "thai",
+            koreanCounting: "korean-hangul-formal",
+            koreanDigital: "korean-hangul-formal",
+            koreanDigital2: "korean-hanja-informal",
+            hebrew1: "hebrew",
+            hebrew2: "hebrew",
+            hindiNumbers: "devanagari",
+            ganada: "hangul",
+            taiwaneseCounting: "cjk-ideographic",
+            taiwaneseCountingThousand: "cjk-ideographic",
+            taiwaneseDigital: "cjk-decimal",
+        };
+        return mapping[format] ?? format;
+    }
+    refreshTabStops() {
+        if (!this.options.experimental)
+            return;
+        clearTimeout(this.tabsTimeout);
+        this.tabsTimeout = setTimeout(() => {
+            const pixelToPoint = (0, javascript_1.computePixelToPoint)();
+            for (let tab of this.currentTabs) {
+                (0, javascript_1.updateTabStop)(tab.span, tab.stops, this.defaultTabSize, pixelToPoint);
+            }
+        }, 500);
+    }
+}
+exports.HtmlRenderer = HtmlRenderer;
+function createElement(tagName, props, children) {
+    return createElementNS(undefined, tagName, props, children);
+}
+function createSvgElement(tagName, props, children) {
+    return createElementNS(ns.svg, tagName, props, children);
+}
+function createElementNS(ns, tagName, props, children) {
+    var result = ns ? document.createElementNS(ns, tagName) : document.createElement(tagName);
+    Object.assign(result, props);
+    children && appendChildren(result, children);
+    return result;
+}
+function removeAllElements(elem) {
+    elem.innerHTML = '';
+}
+function appendChildren(elem, children) {
+    children.forEach(c => elem.appendChild((0, utils_1.isString)(c) ? document.createTextNode(c) : c));
+}
+function createStyleElement(cssText) {
+    return createElement("style", { innerHTML: cssText });
+}
+function appendComment(elem, comment) {
+    elem.appendChild(document.createComment(comment));
+}
+function findParent(elem, type) {
+    var parent = elem.parent;
+    while (parent != null && parent.type != type)
+        parent = parent.parent;
+    return parent;
+}
+
+
+/***/ }),
+
+/***/ "./src/javascript.ts":
+/*!***************************!*\
+  !*** ./src/javascript.ts ***!
+  \***************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.updateTabStop = exports.computePixelToPoint = void 0;
+const defaultTab = { pos: 0, leader: "none", style: "left" };
+const maxTabs = 50;
+function computePixelToPoint(container = document.body) {
+    const temp = document.createElement("div");
+    temp.style.width = '100pt';
+    container.appendChild(temp);
+    const result = 100 / temp.offsetWidth;
+    container.removeChild(temp);
+    return result;
+}
+exports.computePixelToPoint = computePixelToPoint;
+function updateTabStop(elem, tabs, defaultTabSize, pixelToPoint = 72 / 96) {
+    const p = elem.closest("p");
+    const ebb = elem.getBoundingClientRect();
+    const pbb = p.getBoundingClientRect();
+    const pcs = getComputedStyle(p);
+    const tabStops = tabs?.length > 0 ? tabs.map(t => ({
+        pos: lengthToPoint(t.position),
+        leader: t.leader,
+        style: t.style
+    })).sort((a, b) => a.pos - b.pos) : [defaultTab];
+    const lastTab = tabStops[tabStops.length - 1];
+    const pWidthPt = pbb.width * pixelToPoint;
+    const size = lengthToPoint(defaultTabSize);
+    let pos = lastTab.pos + size;
+    if (pos < pWidthPt) {
+        for (; pos < pWidthPt && tabStops.length < maxTabs; pos += size) {
+            tabStops.push({ ...defaultTab, pos: pos });
+        }
+    }
+    const marginLeft = parseFloat(pcs.marginLeft);
+    const pOffset = pbb.left + marginLeft;
+    const left = (ebb.left - pOffset) * pixelToPoint;
+    const tab = tabStops.find(t => t.style != "clear" && t.pos > left);
+    if (tab == null)
+        return;
+    let width = 1;
+    if (tab.style == "right" || tab.style == "center") {
+        const tabStops = Array.from(p.querySelectorAll(`.${elem.className}`));
+        const nextIdx = tabStops.indexOf(elem) + 1;
+        const range = document.createRange();
+        range.setStart(elem, 1);
+        if (nextIdx < tabStops.length) {
+            range.setEndBefore(tabStops[nextIdx]);
+        }
+        else {
+            range.setEndAfter(p);
+        }
+        const mul = tab.style == "center" ? 0.5 : 1;
+        const nextBB = range.getBoundingClientRect();
+        const offset = nextBB.left + mul * nextBB.width - (pbb.left - marginLeft);
+        width = tab.pos - offset * pixelToPoint;
+    }
+    else {
+        width = tab.pos - left;
+    }
+    elem.innerHTML = "&nbsp;";
+    elem.style.textDecoration = "inherit";
+    elem.style.wordSpacing = `${width.toFixed(0)}pt`;
+    switch (tab.leader) {
+        case "dot":
+        case "middleDot":
+            elem.style.textDecoration = "underline";
+            elem.style.textDecorationStyle = "dotted";
+            break;
+        case "hyphen":
+        case "heavy":
+        case "underscore":
+            elem.style.textDecoration = "underline";
+            break;
+    }
+}
+exports.updateTabStop = updateTabStop;
+function lengthToPoint(length) {
+    return parseFloat(length);
+}
+
 
 /***/ }),
 
@@ -3436,6 +5026,63 @@ exports.deobfuscate = deobfuscate;
 
 /***/ }),
 
+/***/ "./src/popover.js":
+/*!************************!*\
+  !*** ./src/popover.js ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ createPopover)
+/* harmony export */ });
+
+function createPopover(id, node, children) {
+  let popoverContainer = document.createElement("div");
+  popoverContainer.id = `popover-comment-${id}`;
+  popoverContainer.className = "popover-container";
+  popoverContainer.style.padding = "15px";
+  popoverContainer.style.boxShadow = "3px 3px 8px #ccc";
+  popoverContainer.style.position = "fixed";
+  popoverContainer.style.zIndex = "999";
+  popoverContainer.style.backgroundColor = "#fff";
+  popoverContainer.style.borderRadius = "5px";
+
+  popoverContainer.appendChild(children);
+
+  document.body.appendChild(popoverContainer);
+  
+  let rect = node.getBoundingClientRect();
+  popoverContainer.style.top = `${rect.top - 20}px`;
+  popoverContainer.style.left = `${rect.left + 20}px`;
+
+  var isVisible = true;
+
+  function hidePopover() {
+    isVisible = false;
+    document.body.removeChild(popoverContainer);
+  }
+
+  document.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (isVisible &&
+        e.target !== popoverContainer &&
+        e.target.parentElement !== popoverContainer &&
+        e.target !== node &&
+        e.target.parentElement !== node
+    ) {
+      hidePopover();
+    }
+  });
+
+  popoverContainer.addEventListener('mouseleave', function (e) {
+    hidePopover();
+  })
+}
+
+
+/***/ }),
+
 /***/ "jszip":
 /*!*******************************************************************************************************!*\
   !*** external {"root":"JSZip","commonjs":"jszip","commonjs2":"jszip","amd":"jszip","module":"jszip"} ***!
@@ -3473,6 +5120,35 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_jszip__;
 /******/ 	// Return the exports of the module
 /******/ 	return module.exports;
 /******/ }
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/make namespace object */
+/******/ (() => {
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = (exports) => {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/ })();
 /******/ 
 /************************************************************************/
 /******/ 
