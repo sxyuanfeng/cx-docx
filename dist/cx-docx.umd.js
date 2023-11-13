@@ -300,6 +300,55 @@ exports.parseRelationships = parseRelationships;
 
 /***/ }),
 
+/***/ "./src/cx-docx.ts":
+/*!************************!*\
+  !*** ./src/cx-docx.ts ***!
+  \************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.renderAsync = exports.praseAsync = exports.defaultOptions = void 0;
+const word_document_1 = __webpack_require__(/*! ./word-document */ "./src/word-document.ts");
+const document_parser_1 = __webpack_require__(/*! ./document-parser */ "./src/document-parser.ts");
+const html_renderer_1 = __webpack_require__(/*! ./html-renderer */ "./src/html-renderer.ts");
+exports.defaultOptions = {
+    ignoreHeight: false,
+    ignoreWidth: false,
+    ignoreFonts: false,
+    breakPages: true,
+    debug: false,
+    experimental: false,
+    className: "docx",
+    inWrapper: true,
+    trimXmlDeclaration: true,
+    ignoreLastRenderedPageBreak: true,
+    renderHeaders: true,
+    renderFooters: true,
+    renderFootnotes: true,
+    renderEndnotes: true,
+    useBase64URL: false,
+    renderChanges: false,
+    renderComments: false,
+    renderOutline: false,
+};
+function praseAsync(data, userOptions = null) {
+    const ops = { ...exports.defaultOptions, ...userOptions };
+    return word_document_1.WordDocument.load(data, new document_parser_1.DocumentParser(ops), ops);
+}
+exports.praseAsync = praseAsync;
+async function renderAsync(data, bodyContainer, styleContainer = null, userOptions = null) {
+    const ops = { ...exports.defaultOptions, ...userOptions };
+    const renderer = new html_renderer_1.HtmlRenderer(window.document);
+    const doc = await word_document_1.WordDocument.load(data, new document_parser_1.DocumentParser(ops), ops);
+    renderer.render(doc, bodyContainer, styleContainer, ops);
+    return doc;
+}
+exports.renderAsync = renderAsync;
+
+
+/***/ }),
+
 /***/ "./src/document-parser.ts":
 /*!********************************!*\
   !*** ./src/document-parser.ts ***!
@@ -2365,55 +2414,6 @@ function parseFooterHeaderReference(elem, xml) {
         type: xml.attr(elem, "type"),
     };
 }
-
-
-/***/ }),
-
-/***/ "./src/docx-preview.ts":
-/*!*****************************!*\
-  !*** ./src/docx-preview.ts ***!
-  \*****************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.renderAsync = exports.praseAsync = exports.defaultOptions = void 0;
-const word_document_1 = __webpack_require__(/*! ./word-document */ "./src/word-document.ts");
-const document_parser_1 = __webpack_require__(/*! ./document-parser */ "./src/document-parser.ts");
-const html_renderer_1 = __webpack_require__(/*! ./html-renderer */ "./src/html-renderer.ts");
-exports.defaultOptions = {
-    ignoreHeight: false,
-    ignoreWidth: false,
-    ignoreFonts: false,
-    breakPages: true,
-    debug: false,
-    experimental: false,
-    className: "docx",
-    inWrapper: true,
-    trimXmlDeclaration: true,
-    ignoreLastRenderedPageBreak: true,
-    renderHeaders: true,
-    renderFooters: true,
-    renderFootnotes: true,
-    renderEndnotes: true,
-    useBase64URL: false,
-    renderChanges: false,
-    renderComments: false,
-    renderOutline: false,
-};
-function praseAsync(data, userOptions = null) {
-    const ops = { ...exports.defaultOptions, ...userOptions };
-    return word_document_1.WordDocument.load(data, new document_parser_1.DocumentParser(ops), ops);
-}
-exports.praseAsync = praseAsync;
-async function renderAsync(data, bodyContainer, styleContainer = null, userOptions = null) {
-    const ops = { ...exports.defaultOptions, ...userOptions };
-    const renderer = new html_renderer_1.HtmlRenderer(window.document);
-    const doc = await word_document_1.WordDocument.load(data, new document_parser_1.DocumentParser(ops), ops);
-    renderer.render(doc, bodyContainer, styleContainer, ops);
-    return doc;
-}
-exports.renderAsync = renderAsync;
 
 
 /***/ }),
@@ -5164,10 +5164,10 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_jszip__;
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/docx-preview.ts");
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/cx-docx.ts");
 /******/ 	
 /******/ 	return __webpack_exports__;
 /******/ })()
 ;
 });
-//# sourceMappingURL=docx-preview.umd.js.map
+//# sourceMappingURL=cx-docx.umd.js.map

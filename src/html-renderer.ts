@@ -4,7 +4,7 @@ import {
 	WmlHyperlink, IDomImage, OpenXmlElement, WmlTableColumn, WmlTableCell, WmlText, WmlSymbol, WmlBreak, WmlNoteReference, IComment
 } from './document/dom';
 import { CommonProperties } from './document/common';
-import { Options } from './docx-preview';
+import { Options } from './cx-docx';
 import { DocumentElement } from './document/document';
 import { WmlParagraph } from './document/paragraph';
 import { asArray, escapeClassName, isString, keyBy, mergeDeep } from './utils';

@@ -4,7 +4,7 @@ function buildConfig(prod, umd = false) {
   const config = {
     mode: 'development',
     entry: {
-      'docx-preview': path.join(__dirname, './src/docx-preview.ts')
+      'cx-docx': path.join(__dirname, './src/cx-docx.ts')
     },
     output: {
       path: path.join(__dirname, './dist'),
