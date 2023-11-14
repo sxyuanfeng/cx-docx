@@ -61,6 +61,7 @@ renderAsync(
         renderEndnotes: true, //enables endnotes rendering
         renderComments: false, // enables comments rendering
         renderOutline: false, // enables outline rendering
+        renderTitleNumbering: true, //enable title numbering
         debug: boolean = false, //enables additional logging
     }): Promise<any>
 ```

@@ -20,7 +20,7 @@ import { BaseHeaderFooterPart } from './header-footer/parts';
 import { Part } from './common/part';
 import { VmlElement } from './vml/vml';
 import createPopover from './popover.js';
-import { commentPng } from './assets';
+import { commentPng, collapsePng } from './assets';
 
 const ns = {
 	svg: "http://www.w3.org/2000/svg",
@@ -64,7 +64,6 @@ export class HtmlRenderer {
 
 	// 组合part中的信息，形成最终渲染的结构
 	processCommentReference(document: WordDocument) {
-		console.log(document)
 		let pArr = document?.documentPart?.body?.children || [];
 		for (let i = pArr.length - 1; i > -1; i--) {
 			let pChildren = pArr[i].children;
@@ -534,13 +533,29 @@ export class HtmlRenderer {
 
 	renderOutlineWrapper(child: HTMLElement): HTMLElement {
 		let outline = this.createOutlineElement();
-		let outlineWrapper = this.createElement("div", { className: `${this.className}-outline-wrapper` }, [outline, child]);
+		let documentContainer = this.createElement("div", { className: `${this.className}-document-container-wrapper`});
+		documentContainer.appendChild(child);
+		let collapseBtn = this.createElement("img", { className: `${this.className}-collapse-btn` });
+		collapseBtn.src = collapsePng;
+		collapseBtn.addEventListener("click", function() {
+			if (!outline.className.includes("close")) {
+				outline.classList.add("close");
+				collapseBtn.classList.add("close");
+			} else {
+				outline.classList.remove("close");
+				collapseBtn.classList.remove("close");
+			}
+		})
+		let collapseBtnWrapper = this.createElement("div", { className: `${this.className}-collapse-btn-wrapper`});
+		collapseBtnWrapper.appendChild(collapseBtn);
+		let outlineWrapper = this.createElement("div", { className: `${this.className}-outline-wrapper` }, [outline, collapseBtnWrapper, documentContainer]);
 		return outlineWrapper;
 	}
 
 	createOutlineElement(): HTMLElement {
 		let outlineContainer = this.createElement("div", { className: `${this.className}-outline-container`});
 		let outlineContent = this.createElement("div", { className: `${this.className}-outline-content`});
+
 		let pArr = this.document.documentPart?.body?.children;
 		for (let p of pArr) {
 			if (!isNaN(Number(p.styleName)) && Number(p.styleName) !== 0) {
@@ -553,7 +568,8 @@ export class HtmlRenderer {
 					}
 				}
 				let result = this.createElement("p");
-				result.style.marginLeft = `${16 * Number(p.styleName)}px`;
+				// result.style.marginLeft = `${16 * Number(p.styleName)}px`;
+				result.style.marginLeft = `${16}px`;
 				// result.style.textOverflow = "ellipsis";
 				// result.style.whiteSpace = "nowrap";
 				// result.style.overflow = "hidden";
@@ -574,11 +590,16 @@ export class HtmlRenderer {
 		var c = this.className;
 		var styleText = `
 .${c}-wrapper { background: gray; padding: 30px; padding-bottom: 0px; display: flex; flex-flow: column; align-items: center; flex: 1; } 
-.${c}-outline-wrapper { background: gray; display: flex; }
-.${c}-outline-container { background: white; width: 300px; height: 100vh; }
-.${c}-outline-content { background: white; width: 300px; height: 100vh; overflow: auto; position: fixed; top: 0; padding: 10px; }
+.${c}-outline-wrapper { display: flex; height: 100%; }
+.${c}-document-container-wrapper { flex-grow: 1; height: 100%; overflow: auto; }
+.${c}-outline-container { background: white; width: 300px; height: 100%; overflow: auto; transition: width .5s ease; }
+.${c}-outline-container.close { width: 0 }
+.${c}-collapse-btn-wrapper { width: 2em; height: 100%; background: gray; }
+.${c}-collapse-btn { width: 2em; height: 2em; background: gray; object-fit: contain; cursor: pointer; }
+.${c}-collapse-btn.close { transform: rotate(-90deg); transition: transform .8s ease-out; }
+.${c}-outline-content { background: white; }
 .${c}-outline-content > p { text-align: left; width: 240px; margin-top: 3px; margin-bottom: 3px; margin-right: 30px; cursor: pointer; }
-.${c}-outline-content > p > span { font-size: 12px !important; }
+.${c}-outline-content > p span { font-size: 12px !important; color: #333; }
 .${c}-wrapper>section.${c} { background: white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); margin-bottom: 30px; }
 .${c} { color: black; hyphens: auto; }
 section.${c} { box-sizing: border-box; display: flex; flex-flow: column nowrap; position: relative; overflow: hidden; }
@@ -739,6 +760,9 @@ section.${c}>footer { z-index: 1; }
 				}
 
 				numbering = numbering ?? style?.paragraphProps?.numbering;
+				if (numbering === undefined || numbering === null) {
+					continue;
+				}
 
 				let currentDomNumbering = domNumberings.find(item => {
 					return item.numId === numbering.id && item.level === numbering.level;
@@ -1295,7 +1319,16 @@ section.${c}>footer { z-index: 1; }
 		this.renderStyleValues(elem.cssStyle, result);
 		this.renderCommonProperties(result.style, elem);
 
-		if (!isNaN(Number(elem.styleName)) && Number(elem.styleName) !== 0 && elem?.numbering?.id !== '0') {
+		const numbering = elem.numbering ?? style?.paragraphProps?.numbering;
+		// const numbering = style?.paragraphProps?.numbering ?? elem.numbering;
+		// console.log(style?.paragraphProps?.numbering, elem.numbering)
+
+		// if (elem.numbering && style?.paragraphProps?.numbering) {
+		// 	numbering.id = style?.paragraphProps?.numbering.id;
+		// 	numbering.level = elem.numbering.level;
+		// }
+
+		if (this.options.renderTitleNumbering && numbering && !isNaN(Number(elem.styleName)) && Number(elem.styleName) !== 0 && Number(elem.styleName) < 4 && elem?.numbering?.id !== '0') {
 			let titleLevel = elem.styleName;
 			if (elem.numbering && elem.numbering.level !== undefined && elem.numbering.level !== null && (elem.numbering.level > (Number(titleLevel) - 1))) {
 				titleLevel = `${elem.numbering.level}`;
@@ -1307,15 +1340,6 @@ section.${c}>footer { z-index: 1; }
 			return result;
 		}
 
-		const numbering = elem.numbering ?? style?.paragraphProps?.numbering;
-		// const numbering = style?.paragraphProps?.numbering ?? elem.numbering;
-		// console.log(style?.paragraphProps?.numbering, elem.numbering)
-
-		// if (elem.numbering && style?.paragraphProps?.numbering) {
-		// 	numbering.id = style?.paragraphProps?.numbering.id;
-		// 	numbering.level = elem.numbering.level;
-		// }
-
 		if (numbering && !elem.noRenderNumbering) {
 			let numberingPart = this.document.numberingPart.numberings;
 			let currentNumbering = numberingPart.find(item => {
@@ -1326,7 +1350,6 @@ section.${c}>footer { z-index: 1; }
 			let currentOverride = currentNumbering?.overrides?.find(item => {return item.level === numbering.level});
 			if (currentOverride) {
 				let overrideCounter = this.numberingCounter(currentNumbering?.abstractId, numbering.level);
-				console.log(overrideCounter)
 				let overrideCounterReset = overrideCounter + " " + (currentOverride.start ? currentOverride.start - 1 : 0);
 				result.style.counterReset = overrideCounterReset;
 			}
@@ -1574,13 +1597,17 @@ section.${c}>footer { z-index: 1; }
 	renderTableRow(elem: OpenXmlElement) {
 		let result = this.createElement("tr");
 
-		this.currentCellPosition.col = 0;
+		if (this.currentCellPosition) {
+			this.currentCellPosition.col = 0;
+		}
 
 		this.renderClass(elem, result);
 		this.renderChildren(elem, result);
 		this.renderStyleValues(elem.cssStyle, result);
 
-		this.currentCellPosition.row++;
+		if (this.currentCellPosition) {
+			this.currentCellPosition.row++;
+		}
 
 		return result;
 	}
@@ -1588,7 +1615,7 @@ section.${c}>footer { z-index: 1; }
 	renderTableCell(elem: WmlTableCell) {
 		let result = this.createElement("td");
 
-		const key = this.currentCellPosition.col;
+		const key = this.currentCellPosition?.col;
 
 		if (elem.verticalMerge) {
 			if (elem.verticalMerge == "restart") {
@@ -1599,7 +1626,9 @@ section.${c}>footer { z-index: 1; }
 				result.style.display = "none";
 			}
 		} else {
-			this.currentVerticalMerge[key] = null;
+			if (this.currentVerticalMerge) {
+				this.currentVerticalMerge[key] = null;
+			}
 		}
 
 		this.renderClass(elem, result);
@@ -1609,7 +1638,9 @@ section.${c}>footer { z-index: 1; }
 		if (elem.span)
 			result.colSpan = elem.span;
 
-		this.currentCellPosition.col += result.colSpan;
+			if (this.currentCellPosition) {
+				this.currentCellPosition.col += result.colSpan;
+			}
 
 		return result;
 	}

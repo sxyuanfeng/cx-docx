@@ -21,6 +21,7 @@ export interface Options {
 	renderChanges: boolean;
     renderComments: boolean;
     renderOutline: boolean;
+    renderTitleNumbering: boolean;
 }
 
 export const defaultOptions: Options = {
@@ -42,6 +43,7 @@ export const defaultOptions: Options = {
 	renderChanges: false,
     renderComments: false,
     renderOutline: false,
+    renderTitleNumbering: true,
 }
 
 export function praseAsync(data: Blob | any, userOptions: Partial<Options> = null): Promise<any>  {
