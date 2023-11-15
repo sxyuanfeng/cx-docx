@@ -20,7 +20,7 @@ import { BaseHeaderFooterPart } from './header-footer/parts';
 import { Part } from './common/part';
 import { VmlElement } from './vml/vml';
 import createPopover from './popover.js';
-import { commentPng, collapsePng } from './assets';
+import { createIconPinglun, createIconCollapse, createIconPrev } from './assets';
 
 const ns = {
 	svg: "http://www.w3.org/2000/svg",
@@ -57,6 +57,9 @@ export class HtmlRenderer {
 	defaultTabSize: string;
 	currentTabs: any[] = [];
 	tabsTimeout: any = 0;
+
+	currentComment: string = '';
+	allComments: string[] = [];
 
 	constructor(public htmlDocument: Document) {
 
@@ -535,8 +538,8 @@ export class HtmlRenderer {
 		let outline = this.createOutlineElement();
 		let documentContainer = this.createElement("div", { className: `${this.className}-document-container-wrapper`});
 		documentContainer.appendChild(child);
-		let collapseBtn = this.createElement("img", { className: `${this.className}-collapse-btn` });
-		collapseBtn.src = collapsePng;
+		let collapseBtn = this.createElement("div", { className: `${this.className}-collapse-btn` });
+		collapseBtn.appendChild(createIconCollapse());
 		collapseBtn.addEventListener("click", function() {
 			if (!outline.className.includes("close")) {
 				outline.classList.add("close");
@@ -548,8 +551,58 @@ export class HtmlRenderer {
 		})
 		let collapseBtnWrapper = this.createElement("div", { className: `${this.className}-collapse-btn-wrapper`});
 		collapseBtnWrapper.appendChild(collapseBtn);
-		let outlineWrapper = this.createElement("div", { className: `${this.className}-outline-wrapper` }, [outline, collapseBtnWrapper, documentContainer]);
+		let commentControler = this.createElement("div", { className: `${this.className}-comment-controler`});
+		let currentCommentElem = this.createElement("span", { className: `${this.className}-current-comment`});
+		this.setCurrentCommentText(currentCommentElem);
+		let allCommentElem = this.createElement("span", { className: `${this.className}-all-comment`});
+		this.setAllCommentText(allCommentElem);
+
+		let that = this;
+		let prevComment = this.createElement("span", { className: `${this.className}-prev-comment`});
+		prevComment.appendChild(createIconPrev());
+		prevComment.title = "上一条";
+		prevComment.addEventListener("click", function(e) {
+			e.stopPropagation();
+			let index = that.allComments.findIndex(item => {return item === that.currentComment;});
+			if (index > 0) {
+				that.currentComment = that.allComments[index - 1];
+				let wrap = document.getElementsByClassName("docx-wrapper")[0];
+				let anchor = wrap.querySelector(`#docx-comment-${that.currentComment}`) as HTMLElement;
+				anchor?.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+				anchor?.click();
+				that.setCurrentCommentText(currentCommentElem);
+			}
+		})
+		let nextComment = this.createElement("span", { className: `${this.className}-next-comment`});
+		nextComment.appendChild(createIconPrev());
+		nextComment.title = "下一条";
+		nextComment.addEventListener("click", function(e) {
+			e.stopPropagation();
+			let index = that.allComments.findIndex(item => {return item === that.currentComment;});
+			if (index < that.allComments.length - 1 && that.allComments.length > 0) {
+				that.currentComment = that.allComments[index + 1];
+				let wrap = document.getElementsByClassName("docx-wrapper")[0];
+				let anchor = wrap.querySelector(`#docx-comment-${that.currentComment}`) as HTMLElement;
+				anchor?.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+				anchor?.click();
+				that.setCurrentCommentText(currentCommentElem);
+			}
+		})
+		commentControler.appendChild(currentCommentElem);
+		commentControler.appendChild(allCommentElem);
+		commentControler.appendChild(prevComment);
+		commentControler.appendChild(nextComment);
+		let outlineWrapper = this.createElement("div", { className: `${this.className}-outline-wrapper` }, [outline, collapseBtnWrapper, documentContainer, commentControler]);
 		return outlineWrapper;
+	}
+
+	setCurrentCommentText(elem) {
+		let index = this.allComments.findIndex(item => {return item === this.currentComment;})
+		elem.textContent = `评论（${index + 1}/`;
+	}
+
+	setAllCommentText(elem) {
+		elem.textContent = `${this.allComments.length}）`;
 	}
 
 	createOutlineElement(): HTMLElement {
@@ -577,7 +630,7 @@ export class HtmlRenderer {
 				result.addEventListener("click", function() {
 					let wrap = document.getElementsByClassName("docx-wrapper")[0];
 					let anchor = wrap.querySelector(`#${ref}`);
-					anchor?.scrollIntoView(true);
+					anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
 				})
 				outlineContent.appendChild(result);
 			}
@@ -610,6 +663,17 @@ section.${c}>footer { z-index: 1; }
 .${c} p { margin: 0pt; min-height: 1em; }
 .${c} span { white-space: pre-wrap; overflow-wrap: break-word; }
 .${c} a { color: inherit; text-decoration: inherit; }
+.${c}-comment-sup { cursor: pointer; }
+.${c}-comment-sup.unread path { fill: #2A66FF; }
+.${c}-comment-controler { position: fixed; top: 5px; right: 25px; background: #fff; width: 200px; 
+	height: 35px; display: flex; align-items: center; border-radius: 4px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
+	.${c}-prev-comment { margin-left: 15px; }
+.${c}-prev-comment svg { transform: rotate(-90deg); cursor: pointer; }
+.${c}-next-comment svg { transform: rotate(90deg); cursor: pointer; }
+.${c}-prev-comment:hover svg path { fill: #2A66FF; }
+.${c}-next-comment:hover svg path { fill: #2A66FF; }
+.${c}-all-comment { height: 22px; line-height: 19px; padding-right: 10px; border-right: 1px solid #ddd; color: gray; }
+.${c}-current-comment { height: 22px; line-height: 19px; margin-left: 20px; color: gray; }
 `;
 
 		return createStyleElement(styleText);
@@ -1194,7 +1258,7 @@ section.${c}>footer { z-index: 1; }
 				let ref = text.split(' ')[1];
 				let wrap = document.getElementsByClassName("docx-wrapper")[0];
 				let anchor = wrap.querySelector(`#${ref}`);
-				anchor?.scrollIntoView(false);
+				anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
 			});
 			return result;
 		}
@@ -1204,8 +1268,10 @@ section.${c}>footer { z-index: 1; }
 	// 在指定位置渲染批注
 	renderCommentReference(elem): Node {
 		if (!elem.noRender && this.options.renderComments) {
-			let supNode = this.createCommentSupNode();
+			let supNode = this.createCommentSupNode() as HTMLElement;
+			supNode.id = `${this.className}-comment-${elem.paraId}`
 			supNode.addEventListener("click", () => {
+				supNode.classList.remove("unread");
 				let children = this.createCommentContentNode(elem);
 				createPopover(elem.paraId, supNode, children);
 			})
@@ -1274,11 +1340,9 @@ section.${c}>footer { z-index: 1; }
 	// 创建批注图标
 	createCommentSupNode(): Node {
 		let elem = this.createElement("sup");
-		let img = this.createElement("img");
-		img.src = commentPng;
-		img.style.width = "10pt";
-		img.style.height = "10pt";
-		img.style.cursor = "pointer";
+		let img = createIconPinglun();
+		elem.classList.add(`${this.className}-comment-sup`);
+		elem.classList.add("unread");
 		elem.appendChild(img);
 		elem.style.padding = "0 0 0 2pt";
 		return elem;
@@ -1387,7 +1451,7 @@ section.${c}>footer { z-index: 1; }
 			result.addEventListener("click", function (e) {
 				let wrap = document.getElementsByClassName("docx-wrapper")[0];
 				let anchor = wrap.querySelector(`#${elem?.href?.replace("#", '')}`);
-				anchor?.scrollIntoView();
+				anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
 			})
 		} else if(elem.id) {
 			const rel = this.document.documentPart.rels
@@ -1988,6 +2052,10 @@ function appendChildren(elem: Element, children: (Node | string)[]) {
 
 function createStyleElement(cssText: string) {
 	return createElement("style", { innerHTML: cssText });
+}
+
+function createScriptElement(jsText: string) {
+	return createElement("script", { innerHTML: jsText});
 }
 
 function appendComment(elem: HTMLElement, comment: string) {
