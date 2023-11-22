@@ -6,6 +6,7 @@ export interface WmlBookmarkStart extends OpenXmlElement {
     name: string;
     colFirst: number;
     colLast: number;
+    displacedByCustomXml: string;
 }
 
 export interface WmlBookmarkEnd extends OpenXmlElement {
@@ -18,7 +19,8 @@ export function parseBookmarkStart(elem: Element, xml: XmlParser): WmlBookmarkSt
         id: xml.attr(elem, "id"),
         name: xml.attr(elem, "name"),
         colFirst: xml.intAttr(elem, "colFirst"),
-        colLast: xml.intAttr(elem, "colLast")
+        colLast: xml.intAttr(elem, "colLast"),
+        displacedByCustomXml: xml.attr(elem, "displacedByCustomXml"),
     }
 }
 

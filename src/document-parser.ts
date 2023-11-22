@@ -123,6 +123,10 @@ export class DocumentParser {
 				case "sdt":
 					children.push(...this.parseSdt(elem, e => this.parseBodyElements(e)));
 					break;
+
+				case "commentRangeEnd":
+					children.push(parseCommentRangeEnd(elem, xml));
+					break;
 			}
 		}
 

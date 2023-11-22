@@ -12,15 +12,15 @@ import { computePixelToPoint, updateTabStop } from './javascript';
 import { FontTablePart } from './font-table/font-table';
 import { FooterHeaderReference, SectionProperties } from './document/section';
 import { WmlRun, RunProperties } from './document/run';
-import { WmlBookmarkStart } from './document/bookmarks';
+import { WmlBookmarkEnd, WmlBookmarkStart } from './document/bookmarks';
 import { IDomStyle } from './document/style';
 import { WmlBaseNote, WmlFootnote } from './notes/elements';
 import { ThemePart } from './theme/theme-part';
 import { BaseHeaderFooterPart } from './header-footer/parts';
 import { Part } from './common/part';
 import { VmlElement } from './vml/vml';
-import createPopover from './popover.js';
-import { createIconPinglun, createIconCollapse, createIconPrev } from './assets';
+import { createIconCollapse, createIconPrev } from './assets/index';
+import { WmlCommentRangeEnd, WmlCommentRangeStart } from './document/comments';
 
 const ns = {
 	svg: "http://www.w3.org/2000/svg",
@@ -61,30 +61,13 @@ export class HtmlRenderer {
 	currentComment: string = '';
 	allComments: string[] = [];
 
+	flatedDocument: [];
+
+	commentIndex: number;
+
+	commentTranslateY: number;
+
 	constructor(public htmlDocument: Document) {
-
-	}
-
-	// 组合part中的信息，形成最终渲染的结构
-	processCommentReference(document: WordDocument) {
-		let pArr = document?.documentPart?.body?.children || [];
-		for (let i = pArr.length - 1; i > -1; i--) {
-			let pChildren = pArr[i].children;
-			for (let j = (pChildren?.length || 0) -1; j > -1; j--) {
-				let child = (pChildren?.[j] as IComment);
-				if (child?.type === DomType.CommentRangeEnd) {
-					child.msg = this.getCommentRangeMsg(pArr, child?.id, i, j);
-					let newComment = Object.assign(this.processCommentPart(document, child?.id, child), child);
-					child.author = newComment.author;
-					child.children = newComment.children;
-					child.date = newComment.date;
-					child.noRender = newComment.noRender;
-					child.paraId = newComment.paraId;
-					child.text = newComment.text;
-				}
-			}
-		}
-		return null;
 	}
 
 	// 解析part中的文本、父子关系、作者等信息
@@ -111,27 +94,6 @@ export class HtmlRenderer {
 		return result;
 	}
 
-	// 提取批注划线内容
-	getCommentRangeMsg(pArr, id: string, iIndex: number, jIndex: number): string {
-		let result = [];
-		let count = 0;
-		for (let i = iIndex; i > -1; i--) {
-			let pChildren = pArr[i].children;
-			let rIndex = count === 0 ? jIndex : (pChildren?.length || 0) -1;
-			for (let j = rIndex; j > -1; j--) {
-				let child = pChildren?.[j];
-				if (child?.type === DomType.CommentRangeStart && child?.id === id) {
-					return this.joinRangeText(result);
-				}
-				if (child?.type !== DomType.CommentRangeStart && child?.type !== DomType.CommentRangeEnd) {
-					result.push(child);
-				}
-			}
-			count += 1;
-		}
-		return '';
-	}
-
 	// 将分割在不通段落、连续块中的划线文本进行拼接
 	joinRangeText(rArr): string {
 		let result = '';
@@ -139,11 +101,24 @@ export class HtmlRenderer {
 			let rChildren = rArr[i]?.children || [];
 			for (let child of rChildren) {
 				if (child && child?.type === DomType.Text) {
-					result = child.text + result;
+					result += child.text;
 				}
 			}
 		}
 		return result;
+	}
+
+	flatChildren(document: WordDocument, flatedDocument: []) {
+		let body = document.documentPart.body;
+		function myFlat(elem, flatedDocument) {
+			flatedDocument.push(elem);
+			if (elem.children && elem.children.length > 0) {
+				for (let child of elem.children) {
+					myFlat(child, flatedDocument);
+				}
+			}
+		}
+		myFlat(body, flatedDocument);
 	}
 
 	render(document: WordDocument, bodyContainer: HTMLElement, styleContainer: HTMLElement = null, options: Options) {
@@ -152,13 +127,18 @@ export class HtmlRenderer {
 		this.className = options.className;
 		this.rootSelector = options.inWrapper ? `.${this.className}-wrapper` : ':root';
 		this.styleMap = null;
+		this.flatedDocument = [];
+		this.commentIndex = 1;
+		this.commentTranslateY = 0;
 
 		styleContainer = styleContainer || bodyContainer;
 
-		this.processCommentReference(document);
+		this.flatChildren(document, this.flatedDocument);
 
 		removeAllElements(styleContainer);
 		removeAllElements(bodyContainer);
+
+		this.processAllComments();
 
 		appendComment(styleContainer, "docxjs library predefined styles");
 		styleContainer.appendChild(this.renderDefaultStyle());
@@ -203,16 +183,195 @@ export class HtmlRenderer {
 		var sectionElements = this.renderSections(document.documentPart.body);
 
 		if (this.options.inWrapper) {
-			if (this.options.renderOutline) {
-				bodyContainer.appendChild(this.renderOutlineWrapper(this.renderWrapper(sectionElements)));
-			} else {
-				bodyContainer.appendChild(this.renderWrapper(sectionElements));
-			}
+			// if (this.options.renderOutline || this.options.renderComments) {
+			// 	bodyContainer.appendChild(this.renderOutlineWrapper(this.renderWrapper(sectionElements)));
+			// } else {
+			// 	bodyContainer.appendChild(this.renderWrapper(sectionElements));
+			// }
+			bodyContainer.appendChild(this.renderOutlineWrapper(this.renderWrapper(sectionElements)));
 		} else {
 			appendChildren(bodyContainer, sectionElements);
 		}
 
 		this.refreshTabStops();
+
+		(this.options.inWrapper && this.options.renderComments) && this.renderCommentElement();
+	}
+
+	processAllComments() {
+		let commentsEx = this.document.commentsExtendedPart?.commentsEx;
+		let comments = this.document.commentsPart?.comments;
+		if (comments && commentsEx) {
+			for (let commentEx of commentsEx) {
+				if (commentEx.paraIdParent === null) {
+					this.allComments.push(commentEx.paraId);
+				}
+			}
+		}
+	}
+
+	renderCommentElement() {
+		if (this.document.commentsPart?.comments) {
+			let wrap = document.getElementsByClassName(`${this.className}-comment-wrap`)[0];
+			for (let paraId of this.allComments) {
+				let commentSupElem = document.getElementById(`${this.className}-comment-start-${paraId}`);
+				let rect = commentSupElem?.getBoundingClientRect();
+				let commentElem = this.createElement("div");
+				commentElem.id = `${this.className}-comment-element-${paraId}`;
+				commentElem.className = `${this.className}-comment-content-wrap`;
+				let that = this;
+				commentElem.addEventListener("mouseenter", e => {
+					for (let paraId of that.allComments) {
+						that.inactiveCommentElement(paraId);
+					}
+					that.activeCommentElement(paraId);
+					that.currentComment = paraId;
+					that.setCurrentCommentText();
+				})
+				commentElem.addEventListener("mouseleave", e => {
+					for (let paraId of that.allComments) {
+						that.inactiveCommentElement(paraId);
+					}
+				})
+				let commentContent = this.renderCommentContent(paraId);
+				if (commentContent !== null) {
+					commentElem.appendChild(commentContent);
+				}
+				wrap.appendChild(commentElem);
+				if (rect) {
+					if (rect.y > this.commentTranslateY) {
+						commentElem.style.top = `${rect.y}px`;
+					} else {
+						commentElem.style.top = `${this.commentTranslateY}px`;
+					}
+					let elemRect = commentElem.getBoundingClientRect();
+					this.commentTranslateY = elemRect.height + elemRect.y + 10;
+				}
+			}
+		}
+	}
+
+	activeCommentElement(paraId) {
+		let commentElem = document.getElementById(`${this.className}-comment-element-${paraId}`);
+		let commentStart = document.getElementById(`${this.className}-comment-start-${paraId}`);
+		let commentEnd = document.getElementById(`${this.className}-comment-end-${paraId}`);
+		if (commentStart) {
+			commentStart.style.borderRight = "4px solid rgb(252, 13, 27)";
+			commentStart.style.marginRight = "3px";
+		}
+		if (commentEnd) {
+			commentEnd.style.borderLeft = "4px solid rgb(252, 13, 27)";
+			commentEnd.style.marginLeft = "3px";
+			commentEnd.classList.add("active");
+		}
+		if (commentElem) {
+			commentElem.style.borderLeft = "5px solid rgb(252, 13, 27)";
+			commentElem.style.boxShadow = "3px 3px 6px #ccc";
+			commentElem.style.left = "-20px";
+			commentElem.classList.add("active");
+		}
+	}
+
+	inactiveCommentElement(paraId) {
+		let commentElem = document.getElementById(`${this.className}-comment-element-${paraId}`);
+		let commentStart = document.getElementById(`${this.className}-comment-start-${paraId}`);
+		let commentEnd = document.getElementById(`${this.className}-comment-end-${paraId}`);
+		if (commentStart) {
+			commentStart.style.borderRight = "none";
+			commentStart.style.marginRight = "0";
+		}
+		if (commentEnd) {
+			commentEnd.style.borderLeft = "none";
+			commentEnd.style.marginLeft = "0";
+			commentEnd.classList.remove("active");
+		}
+		if (commentElem) {
+			commentElem.style.borderLeft = "none";
+			commentElem.style.boxShadow = "none";
+			commentElem.style.left = "0";
+			commentElem.classList.remove("active");
+		}
+	}
+
+	renderCommentContent(paraId): Node | null {
+		let comments = this.document.commentsPart?.comments || [];
+		let commentsEx = this.document.commentsExtendedPart?.commentsEx || [];
+		let comment = comments.find(item => {
+			return item.paraId === paraId;
+		}) as IComment;
+		let id = comment?.id;
+		let msg = '';
+		let commentRangeStartIndex = this.flatedDocument.findIndex(item => {
+			return (item as OpenXmlElement).type === "commentRangeStart" && (item as WmlCommentRangeStart).id === id;
+		});
+		for (let i = commentRangeStartIndex; i < this.flatedDocument.length; i++) {
+			if ((this.flatedDocument[i] as OpenXmlElement).type === "commentRangeEnd" && (this.flatedDocument[i] as WmlCommentRangeEnd).id === id) {
+				break;
+			}
+			if (this.flatedDocument[i] && (this.flatedDocument[i] as OpenXmlElement).type === DomType.Text) {
+				msg = msg + (this.flatedDocument[i] as WmlText).text;
+			}
+		}
+		if (comment) {
+			comment.msg = msg;
+			for (let commentEx of commentsEx) {
+				if (commentEx.paraIdParent === paraId) {
+					let child = comments.find(item => {
+						return item.paraId === commentEx.paraId;
+					});
+					if (child) {
+						comment.children.push(child);
+					}
+				}
+			}
+		}
+		return this.createCommentContentNode(comment);
+	}
+
+	// 渲染批注内容
+	createCommentContentNode(elem: IComment): Node {
+		let commentsContainer = this.createElement("div");
+		let commentContainer = this.createCommentNode(elem);
+		if (commentContainer) {
+			commentsContainer.appendChild(commentContainer);
+		}
+
+		return commentsContainer;
+	}
+
+	// 渲染单个批注
+	createCommentNode(elem: IComment): Node | null {
+		if (!elem) {return null;}
+		let commentContainer = this.createElement("div");
+		let author = this.createElement("span");
+		author.style.marginRight = "10px";
+		author.style.fontSize = "13px";
+		author.textContent = elem.author;
+		let date = this.createElement("span");
+		date.style.fontSize = "13px";
+		date.textContent = elem.date?.replace('T', ' ')?.replace('Z', '');
+		let text = this.createElement("div");
+		text.style.width = "270px";
+		text.style.margin = "3px 0 5px";
+		text.style.fontSize = "14px";
+		text.textContent = elem.text;
+
+		commentContainer.appendChild(author);
+		commentContainer.appendChild(date);
+		commentContainer.appendChild(text);
+
+		if (elem?.children?.length > 0) {
+			let childCommentContainer = this.createElement("div");
+			childCommentContainer.style.borderLeft = "2px solid #bbbfc4";
+			childCommentContainer.style.paddingLeft = "7px";
+			childCommentContainer.style.marginLeft = "20px";
+			for (let i = 0; i < elem?.children?.length; i++) {
+				childCommentContainer.appendChild(this.createCommentNode(elem?.children?.[i]));
+			}
+			commentContainer.appendChild(childCommentContainer);
+		}
+
+		return commentContainer;
 	}
 
 	renderTheme(themePart: ThemePart, styleContainer: HTMLElement) {
@@ -538,6 +697,8 @@ export class HtmlRenderer {
 		let outline = this.createOutlineElement();
 		let documentContainer = this.createElement("div", { className: `${this.className}-document-container-wrapper`});
 		documentContainer.appendChild(child);
+		let documentCommentContainer = this.createElement("div", { className: `${this.className}-document-comment-container-wrapper`});
+		documentCommentContainer.appendChild(documentContainer);
 		let collapseBtn = this.createElement("div", { className: `${this.className}-collapse-btn` });
 		collapseBtn.appendChild(createIconCollapse());
 		collapseBtn.addEventListener("click", function() {
@@ -551,8 +712,10 @@ export class HtmlRenderer {
 		})
 		let collapseBtnWrapper = this.createElement("div", { className: `${this.className}-collapse-btn-wrapper`});
 		collapseBtnWrapper.appendChild(collapseBtn);
+
 		let commentControler = this.createElement("div", { className: `${this.className}-comment-controler`});
 		let currentCommentElem = this.createElement("span", { className: `${this.className}-current-comment`});
+		currentCommentElem.id = `${this.className}-comment-current-index`;
 		this.setCurrentCommentText(currentCommentElem);
 		let allCommentElem = this.createElement("span", { className: `${this.className}-all-comment`});
 		this.setAllCommentText(allCommentElem);
@@ -560,45 +723,120 @@ export class HtmlRenderer {
 		let that = this;
 		let prevComment = this.createElement("span", { className: `${this.className}-prev-comment`});
 		prevComment.appendChild(createIconPrev());
-		prevComment.title = "上一条";
+		prevComment.title = "ctrl + ↑";
 		prevComment.addEventListener("click", function(e) {
 			e.stopPropagation();
-			let index = that.allComments.findIndex(item => {return item === that.currentComment;});
-			if (index > 0) {
-				that.currentComment = that.allComments[index - 1];
-				let wrap = document.getElementsByClassName("docx-wrapper")[0];
-				let anchor = wrap.querySelector(`#docx-comment-${that.currentComment}`) as HTMLElement;
-				anchor?.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
-				anchor?.click();
-				that.setCurrentCommentText(currentCommentElem);
+			that.handleClickPrevComment();
+		})
+
+		document.addEventListener("keydown", function(e) {
+			if (e.keyCode === 38 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+				e.preventDefault();
+				that.handleClickPrevComment();
 			}
 		})
+
 		let nextComment = this.createElement("span", { className: `${this.className}-next-comment`});
 		nextComment.appendChild(createIconPrev());
-		nextComment.title = "下一条";
+		nextComment.title = "ctrl + ↓";
 		nextComment.addEventListener("click", function(e) {
 			e.stopPropagation();
-			let index = that.allComments.findIndex(item => {return item === that.currentComment;});
-			if (index < that.allComments.length - 1 && that.allComments.length > 0) {
-				that.currentComment = that.allComments[index + 1];
-				let wrap = document.getElementsByClassName("docx-wrapper")[0];
-				let anchor = wrap.querySelector(`#docx-comment-${that.currentComment}`) as HTMLElement;
-				anchor?.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
-				anchor?.click();
-				that.setCurrentCommentText(currentCommentElem);
+			that.handleClickNextComment();
+		})
+
+		document.addEventListener("keydown", function(e) {
+			if (e.keyCode === 40 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+				e.preventDefault();
+				that.handleClickNextComment();
 			}
 		})
+		
 		commentControler.appendChild(currentCommentElem);
 		commentControler.appendChild(allCommentElem);
 		commentControler.appendChild(prevComment);
 		commentControler.appendChild(nextComment);
-		let outlineWrapper = this.createElement("div", { className: `${this.className}-outline-wrapper` }, [outline, collapseBtnWrapper, documentContainer, commentControler]);
+
+		let commentWrap = this.createElement("div", { className: `${this.className}-comment-wrap`});
+		commentWrap.appendChild(commentControler);
+		
+		// let collapseCommentBtn = this.createElement("div", { className: `${this.className}-collapse-comment-btn` });
+		// collapseCommentBtn.appendChild(createIconCollapse());
+		// collapseCommentBtn.addEventListener("click", function() {
+		// 	if (!commentWrap.className.includes("close")) {
+		// 		commentWrap.classList.add("close");
+		// 		collapseCommentBtn.classList.add("close");
+		// 	} else {
+		// 		commentWrap.classList.remove("close");
+		// 		collapseCommentBtn.classList.remove("close");
+		// 	}
+		// })
+		// let collapseCommentBtnWrapper = this.createElement("div", { className: `${this.className}-collapse-comment-btn-wrapper`});
+		// collapseCommentBtnWrapper.appendChild(collapseCommentBtn);
+
+		let renderers = [documentCommentContainer];
+		if (this.options.renderOutline) {
+			renderers.unshift(collapseBtnWrapper)
+			renderers.unshift(outline as HTMLDivElement);
+		}
+		if (this.options.renderComments) {
+			// documentCommentContainer.appendChild(collapseCommentBtnWrapper);
+			documentCommentContainer.appendChild(commentWrap);
+		}
+		let outlineWrapper = this.createElement("div", { className: `${this.className}-outline-wrapper` }, renderers);
+
 		return outlineWrapper;
 	}
 
-	setCurrentCommentText(elem) {
+	handleClickPrevComment() {
+		let index = this.allComments.findIndex(item => {return item === this.currentComment;});
+		if (index > 0) {
+			this.currentComment = this.allComments[index - 1];
+		} else if (index === 0) {
+			this.currentComment = this.allComments[this.allComments.length - 1];
+		} else {
+			return;
+		}
+		let wrap = document.getElementsByClassName(`${this.className}-comment-wrap`)[0];
+		let anchor = wrap.querySelector(`#${this.className}-comment-element-${this.currentComment}`) as HTMLElement;
+		anchor?.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+		anchor.click();
+		this.setCurrentCommentText();
+		for (let paraId of this.allComments) {
+			this.inactiveCommentElement(paraId);
+		}
+		this.activeCommentElement(this.currentComment);
+	}
+
+	handleClickNextComment() {
+		let index = this.allComments.findIndex(item => {return item === this.currentComment;});
+		if (index < this.allComments.length - 1 && this.allComments.length > 0) {
+			this.currentComment = this.allComments[index + 1];
+		} else if (index === this.allComments.length - 1  && this.allComments.length > 0) {
+			this.currentComment = this.allComments[0];
+		} else {
+			return;
+		}
+		let wrap = document.getElementsByClassName(`${this.className}-comment-wrap`)[0];
+		let anchor = wrap.querySelector(`#${this.className}-comment-element-${this.currentComment}`) as HTMLElement;
+		anchor?.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+		anchor.click();
+		this.setCurrentCommentText();
+		for (let paraId of this.allComments) {
+			this.inactiveCommentElement(paraId);
+		}
+		this.activeCommentElement(this.currentComment);
+	}
+
+	setCurrentCommentText(currentElem?) {
+		let elem = document.getElementById(`${this.className}-comment-current-index`);
 		let index = this.allComments.findIndex(item => {return item === this.currentComment;})
-		elem.textContent = `评论（${index + 1}/`;
+		if (currentElem) {
+			currentElem.textContent = `评论（${index + 1}/`;
+		} else {
+			if (elem) {
+				elem.textContent = `评论（${index + 1}/`;
+			}
+		}
 	}
 
 	setAllCommentText(elem) {
@@ -609,30 +847,37 @@ export class HtmlRenderer {
 		let outlineContainer = this.createElement("div", { className: `${this.className}-outline-container`});
 		let outlineContent = this.createElement("div", { className: `${this.className}-outline-content`});
 
-		let pArr = this.document.documentPart?.body?.children;
+		let pArr = this.document.documentPart.body.children;
 		for (let p of pArr) {
-			if (!isNaN(Number(p.styleName)) && Number(p.styleName) !== 0) {
-				let ref;
-				for (let child of p.children || []) {
-					if (child.type === "bookmarkStart" || child.type === "bookmarkEnd") {
-						let c = child as WmlBookmarkStart;
-						ref = c.name;
-						break;
+			if (p.type === DomType.Paragraph) {
+				let pChildren = p.children ?? [];
+				for (let i = 0; i < pChildren.length; i++) {
+					let child = pChildren[i];
+					if (child.type === DomType.BookmarkStart && (child as WmlBookmarkStart).name?.startsWith("_Toc") && !(child as WmlBookmarkStart).displacedByCustomXml) {
+						let endIndex = pChildren.findIndex(item => {
+							return item.type === DomType.BookmarkEnd && (item as WmlBookmarkEnd).id === (child as WmlBookmarkStart).id;
+						})
+						if (endIndex > -1) {
+							let title = this.joinRangeText(pChildren);
+							if (title.length > 30) {
+								break;
+							}
+							let result = this.createElement("p");
+							result.style.marginLeft = `${16}px`;
+							result.style.fontSize = '14px';
+							result.style.lineHeight = '20px';
+							result.textContent = title;
+							let that = this;
+							result.addEventListener("click", function() {
+								let wrap = document.getElementsByClassName(`${that.className}-wrapper`)[0];
+								let anchor = wrap.querySelector(`#${(child as WmlBookmarkStart).name}`);
+								anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+							})
+							outlineContent.appendChild(result);
+							break;
+						}
 					}
 				}
-				let result = this.createElement("p");
-				// result.style.marginLeft = `${16 * Number(p.styleName)}px`;
-				result.style.marginLeft = `${16}px`;
-				// result.style.textOverflow = "ellipsis";
-				// result.style.whiteSpace = "nowrap";
-				// result.style.overflow = "hidden";
-				this.renderChildren(p, result);
-				result.addEventListener("click", function() {
-					let wrap = document.getElementsByClassName("docx-wrapper")[0];
-					let anchor = wrap.querySelector(`#${ref}`);
-					anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-				})
-				outlineContent.appendChild(result);
 			}
 		}
 		outlineContainer.appendChild(outlineContent);
@@ -644,14 +889,23 @@ export class HtmlRenderer {
 		var styleText = `
 .${c}-wrapper { background: gray; padding: 30px; padding-bottom: 0px; display: flex; flex-flow: column; align-items: center; flex: 1; } 
 .${c}-outline-wrapper { display: flex; height: 100%; }
-.${c}-document-container-wrapper { flex-grow: 1; height: 100%; overflow: auto; }
+.${c}-document-comment-container-wrapper { flex-grow: 1; height: 100%; overflow: auto; display: flex; background: gray; counter-reset: ${c}-comment-range-end-counter 0; }
+.${c}-document-container-wrapper { flex-grow: 1; }
+.${c}-collapse-comment-btn-wrapper { position: sticky; top: 0; }
+.${c}-comment-wrap { position: relative; width: 340px; counter-reset: ${c}-comment-counter 0;}
+.${c}-comment-range-end { counter-increment: ${c}-comment-range-end-counter; }
+.${c}-comment-range-end.active::after { content: ""counter(${c}-comment-range-end-counter, decimal)""; color: rgb(252, 13, 27); font-size: 16px; font-weight: 600; margin-left: 3px;}
+.${c}-comment-content-wrap { counter-increment: ${c}-comment-counter; position: absolute; left: 0; width: 300px; padding: 15px; margin-right: 5px; z-index: 998; background-color: #fff; border-radius: 5px; text-align: start; cursor: pointer;}
+.${c}-comment-content-wrap.active::before {content: ""counter(${c}-comment-counter, decimal)""; position: absolute; left: -26px; top: -2px; color: #fff; font-weight: 600; font-size: 20px;}
+.${c}-comment-controler { position: fixed; top: 5px; right: 25px; background: #fff; min-width: 200px; 
+	height: 35px; display: flex; align-items: center; border-radius: 4px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); z-index: 999; }
 .${c}-outline-container { background: white; width: 300px; height: 100%; overflow: auto; transition: width .5s ease; }
 .${c}-outline-container.close { width: 0 }
-.${c}-collapse-btn-wrapper { width: 2em; height: 100%; background: gray; }
-.${c}-collapse-btn { width: 2em; height: 2em; background: gray; object-fit: contain; cursor: pointer; }
-.${c}-collapse-btn.close { transform: rotate(-90deg); transition: transform .8s ease-out; }
+.${c}-collapse-btn-wrapper { width: 1.5em; height: 100%; background: gray; }
+.${c}-collapse-btn { transform: rotate(90deg); width: 1.5em; height: 1.5em; background: gray; object-fit: contain; cursor: pointer; transition: transform .8s ease-out; }
+.${c}-collapse-btn.close { transform: rotate(0deg); transition: transform .8s ease-out; }
 .${c}-outline-content { background: white; }
-.${c}-outline-content > p { text-align: left; width: 240px; margin-top: 3px; margin-bottom: 3px; margin-right: 30px; cursor: pointer; }
+.${c}-outline-content > p { text-align: left; margin-top: 3px; margin-bottom: 3px; margin-right: 30px; cursor: pointer; }
 .${c}-outline-content > p span { font-size: 12px !important; color: #333; }
 .${c}-wrapper>section.${c} { background: white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); margin-bottom: 30px; }
 .${c} { color: black; hyphens: auto; }
@@ -663,13 +917,8 @@ section.${c}>footer { z-index: 1; }
 .${c} p { margin: 0pt; min-height: 1em; }
 .${c} span { white-space: pre-wrap; overflow-wrap: break-word; }
 .${c} a { color: inherit; text-decoration: inherit; }
-.${c}-comment-sup { cursor: pointer; }
-.${c}-comment-sup.unread path { fill: #2A66FF; }
-.${c}-comment-controler { position: fixed; top: 5px; right: 25px; background: #fff; width: 200px; 
-	height: 35px; display: flex; align-items: center; border-radius: 4px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
-	.${c}-prev-comment { margin-left: 15px; }
-.${c}-prev-comment svg { transform: rotate(-90deg); cursor: pointer; }
-.${c}-next-comment svg { transform: rotate(90deg); cursor: pointer; }
+.${c}-prev-comment { margin-left: 10px; transform: rotate(-90deg); cursor: pointer; }
+.${c}-next-comment { margin-right: 10px; transform: rotate(90deg); cursor: pointer; }
 .${c}-prev-comment:hover svg path { fill: #2A66FF; }
 .${c}-next-comment:hover svg path { fill: #2A66FF; }
 .${c}-all-comment { height: 22px; line-height: 19px; padding-right: 10px; border-right: 1px solid #ddd; color: gray; }
@@ -1200,8 +1449,11 @@ section.${c}>footer { z-index: 1; }
 			case DomType.Deleted:
 				return this.renderDeleted(elem);
 
+			case DomType.CommentRangeStart:
+				return this.renderCommentRangeStart(elem);
+
 			case DomType.CommentRangeEnd:
-				return this.renderCommentReference(elem);
+				return this.renderCommentRangeEnd(elem);
 		}
 
 		return null;
@@ -1252,11 +1504,12 @@ section.${c}>footer { z-index: 1; }
 					break;
 				}
 			}
-			result.textContent = this.joinRangeText(textArr.reverse());
+			result.textContent = this.joinRangeText(textArr);
 			result.style.cursor = "pointer";
+			let that = this;
 			result.addEventListener("click" , function() {
 				let ref = text.split(' ')[1];
-				let wrap = document.getElementsByClassName("docx-wrapper")[0];
+				let wrap = document.getElementsByClassName(`${that.className}-wrapper`)[0];
 				let anchor = wrap.querySelector(`#${ref}`);
 				anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
 			});
@@ -1265,86 +1518,36 @@ section.${c}>footer { z-index: 1; }
 		return null;
 	}
 
-	// 在指定位置渲染批注
-	renderCommentReference(elem): Node {
-		if (!elem.noRender && this.options.renderComments) {
-			let supNode = this.createCommentSupNode() as HTMLElement;
-			supNode.id = `${this.className}-comment-${elem.paraId}`
-			supNode.addEventListener("click", () => {
-				supNode.classList.remove("unread");
-				let children = this.createCommentContentNode(elem);
-				createPopover(elem.paraId, supNode, children);
-			})
-			return supNode;
+	renderCommentRangeStart(elem): Node | null {
+		let comments = this.document.commentsPart.comments;
+		let commentsEx = this.document.commentsExtendedPart.commentsEx;
+		let paraId = comments.find(item => {return item.id === elem.id})?.paraId;
+		let paraIdParent = commentsEx.find(item => {return item.paraId === paraId})?.paraIdParent;
+		if (paraIdParent) {
+			return null;
 		}
-		return null;
+		return this.createCommentSupNode('start', paraId);
 	}
 
-	// 渲染批注内容
-	createCommentContentNode(elem): Node {
-		let commentsContainer = this.createElement("div");
-		let msgContainer = this.createElement("div");
-		msgContainer.textContent = elem.msg;
-		msgContainer.style.textOverflow = "ellipsis";
-		msgContainer.style.whiteSpace = "nowrap";
-		msgContainer.style.overflow = "hidden";
-		msgContainer.style.paddingLeft = "5px";
-		msgContainer.style.borderLeft = "2px solid #bbbfc4";
-		msgContainer.style.width = "300px";
-		msgContainer.style.fontSize = "14px";
-		msgContainer.style.color = "#646a73";
-		msgContainer.title = elem.msg;
-
-		let commentContainer = this.createCommentNode(elem);
-
-		commentsContainer.appendChild(msgContainer);
-		commentsContainer.appendChild(commentContainer);
-
-		return commentsContainer;
-	}
-
-	// 渲染单个批注
-	createCommentNode(elem): Node {
-		let commentContainer = this.createElement("div");
-		let author = this.createElement("span");
-		author.style.marginRight = "10px";
-		author.style.fontSize = "13px";
-		author.textContent = elem.author;
-		let date = this.createElement("span");
-		date.style.fontSize = "13px";
-		date.textContent = elem.date?.replace('T', ' ')?.replace('Z', '');
-		let text = this.createElement("div");
-		text.style.width = "200px";
-		text.style.margin = "3px 0 5px";
-		text.style.fontSize = "14px";
-		text.textContent = elem.text;
-
-		commentContainer.appendChild(author);
-		commentContainer.appendChild(date);
-		commentContainer.appendChild(text);
-
-		if (elem?.children?.length > 0) {
-			let childCommentContainer = this.createElement("div");
-			childCommentContainer.style.borderLeft = "2px solid #bbbfc4";
-			childCommentContainer.style.paddingLeft = "7px";
-			childCommentContainer.style.marginLeft = "20px";
-			for (let i = 0; i < elem?.children?.length; i++) {
-				childCommentContainer.appendChild(this.createCommentNode(elem?.children?.[i]));
-			}
-			commentContainer.appendChild(childCommentContainer);
+	renderCommentRangeEnd(elem): Node | null {
+		let comments = this.document.commentsPart.comments;
+		let commentsEx = this.document.commentsExtendedPart.commentsEx;
+		let paraId = comments.find(item => {return item.id === elem.id})?.paraId;
+		let paraIdParent = commentsEx.find(item => {return item.paraId === paraId})?.paraIdParent;
+		if (paraIdParent) {
+			return null;
 		}
+		let endElem = this.createCommentSupNode('end', paraId);
+		endElem.className = `${this.className}-comment-range-end`;
 
-		return commentContainer;
+		return endElem;
 	}
 
 	// 创建批注图标
-	createCommentSupNode(): Node {
-		let elem = this.createElement("sup");
-		let img = createIconPinglun();
-		elem.classList.add(`${this.className}-comment-sup`);
-		elem.classList.add("unread");
-		elem.appendChild(img);
-		elem.style.padding = "0 0 0 2pt";
+	createCommentSupNode(type, paraId): HTMLElement {
+		let elem = this.createElement("span");
+		elem.id = `${this.className}-comment-${type}-${paraId}`;
+		this.commentIndex += 1;
 		return elem;
 	}
 
@@ -1392,7 +1595,7 @@ section.${c}>footer { z-index: 1; }
 		// 	numbering.level = elem.numbering.level;
 		// }
 
-		if (this.options.renderTitleNumbering && numbering && !isNaN(Number(elem.styleName)) && Number(elem.styleName) !== 0 && Number(elem.styleName) < 4 && elem?.numbering?.id !== '0') {
+		if (this.options.renderNumbering && numbering && !isNaN(Number(elem.styleName)) && Number(elem.styleName) !== 0 && Number(elem.styleName) < 4 && elem?.numbering?.id !== '0') {
 			let titleLevel = elem.styleName;
 			if (elem.numbering && elem.numbering.level !== undefined && elem.numbering.level !== null && (elem.numbering.level > (Number(titleLevel) - 1))) {
 				titleLevel = `${elem.numbering.level}`;
@@ -1404,7 +1607,7 @@ section.${c}>footer { z-index: 1; }
 			return result;
 		}
 
-		if (numbering && !elem.noRenderNumbering) {
+		if (this.options.renderNumbering && numbering && !elem.noRenderNumbering) {
 			let numberingPart = this.document.numberingPart.numberings;
 			let currentNumbering = numberingPart.find(item => {
 				return item.id === numbering.id;
@@ -1448,8 +1651,9 @@ section.${c}>footer { z-index: 1; }
 		if (elem.href) {
 			// result.href = elem.href;
 			result.style.cursor = "pointer";
+			let that = this;
 			result.addEventListener("click", function (e) {
-				let wrap = document.getElementsByClassName("docx-wrapper")[0];
+				let wrap = document.getElementsByClassName(`${that.className}-wrapper`)[0];
 				let anchor = wrap.querySelector(`#${elem?.href?.replace("#", '')}`);
 				anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
 			})
@@ -1561,7 +1765,7 @@ section.${c}>footer { z-index: 1; }
 			for (let p of pArr) {
 				rArr = rArr.concat(p?.children || []);
 			}
-			let result = this.joinRangeText(rArr.reverse());
+			let result = this.joinRangeText(rArr);
 			return result;
 		}
 		return '';

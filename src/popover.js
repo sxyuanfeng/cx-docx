@@ -16,7 +16,7 @@ export default function createPopover(id, node, children) {
   
   let rect = node.getBoundingClientRect();
   popoverContainer.style.top = `${rect.top - 20}px`;
-  popoverContainer.style.left = `${rect.left + 20}px`;
+  popoverContainer.style.left = `${rect.left + 35}px`;
 
   var isVisible = true;
 

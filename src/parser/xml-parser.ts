@@ -31,7 +31,7 @@ export class XmlParser {
     elements(elem: Element, localName: string = null): Element[] {
         const result = [];
 
-        for (let i = 0, l = elem.childNodes.length; i < l; i++) {
+        for (let i = 0, l = elem?.childNodes.length || 0; i < l; i++) {
             let c = elem.childNodes.item(i);
 
             if (c.nodeType == 1 && (localName == null || (c as Element).localName == localName))
@@ -42,7 +42,7 @@ export class XmlParser {
     }
 
     element(elem: Element, localName: string): Element {
-        for (let i = 0, l = elem.childNodes.length; i < l; i++) {
+        for (let i = 0, l = elem?.childNodes.length || 0; i < l; i++) {
             let c = elem.childNodes.item(i);
 
             if (c.nodeType == 1 && (c as Element).localName == localName)

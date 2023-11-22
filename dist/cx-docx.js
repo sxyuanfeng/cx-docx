@@ -16,8 +16,8 @@ const createIconPinglun = function () {
     svg.setAttribute("width", '20px');
     svg.setAttribute("height", '20px');
     let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", "M511.999488 847.882863c-28.734592 0-56.729303-2.604314-83.969807-7.099698L231.232673 960.185602 231.232673 761.40735C128.618486 689.355337 62.772174 578.889433 62.772174 454.825836c0-217.07906 201.129864-393.058051 449.228338-393.058051 248.084146 0 449.228338 175.980014 449.228338 393.058051C961.227826 671.917176 760.083635 847.882863 511.999488 847.882863zM511.999488 117.91762c-217.086932 0-393.074156 150.851707-393.074156 336.907193 0 114.166179 66.421434 214.898395 167.761552 275.820929l-1.768346 130.234133 132.171551-79.455633c30.4487 6.497994 62.117231 10.308787 94.910422 10.308787 217.101258 0 393.073132-150.825101 393.073132-336.907193C905.073644 268.769326 729.10177 117.91762 511.999488 117.91762zM736.614169 510.976694c-31.011542 0-56.154182-25.128307-56.154182-56.150858 0-31.010271 25.14264-56.151881 56.154182-56.151881s56.154182 25.14161 56.154182 56.151881C792.768351 485.848387 767.624687 510.976694 736.614169 510.976694zM511.999488 510.976694c-31.010518 0-56.153158-25.128307-56.153158-56.150858 0-31.010271 25.14264-56.151881 56.153158-56.151881 31.011542 0 56.154182 25.14161 56.154182 56.151881C568.15367 485.848387 543.01103 510.976694 511.999488 510.976694zM287.385831 510.976694c-31.010518 0-56.153158-25.128307-56.153158-56.150858 0-31.010271 25.14264-56.151881 56.153158-56.151881s56.153158 25.14161 56.153158 56.151881C343.53899 485.848387 318.39635 510.976694 287.385831 510.976694z");
-    path.setAttribute("fill", "#ccc");
+    path.setAttribute("d", "M512.13274 64C229.33274 64 0.13274 250.2 0.13274 480c0 95.2 39.8 182.4 105.8 252.6C76.13274 811.4 14.13274 878.2 13.13274 879c-13.2 14-16.8 34.4-9.2 52S28.93274 960 48.13274 960c123 0 220-51.4 278.2-92.6C384.13274 885.6 446.53274 896 512.13274 896c282.8 0 512-186.2 512-416S794.93274 64 512.13274 64z m0 736c-53.4 0-106.2-8.2-156.8-24.2l-45.4-14.4-39 27.6c-28.6 20.2-67.8 42.8-115 58 14.6-24.2 28.8-51.4 39.8-80.4l21.2-56.2-41.2-43.6C139.53274 628.2 96.13274 564.4 96.13274 480c0-176.4 186.6-320 416-320s416 143.6 416 320-186.6 320-416 320z");
+    path.setAttribute("fill", "#777");
     svg.appendChild(path);
     return svg;
 };
@@ -25,10 +25,10 @@ exports.createIconPinglun = createIconPinglun;
 const createIconCollapse = function () {
     let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 1024 1024");
-    svg.setAttribute("width", '30px');
-    svg.setAttribute("height", '30px');
+    svg.setAttribute("width", '24px');
+    svg.setAttribute("height", '24px');
     let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", "M512 635.733333l149.333333-149.333333-59.733333-59.733333-89.6 89.6L422.4 426.666667l-59.733333 59.733333 149.333333 149.333333zM512 170.666667c-187.733333 0-341.333333 153.6-341.333333 341.333333s153.6 341.333333 341.333333 341.333333 341.333333-153.6 341.333333-341.333333-153.6-341.333333-341.333333-341.333333z m0 85.333333c140.8 0 256 115.2 256 256s-115.2 256-256 256-256-115.2-256-256 115.2-256 256-256z");
+    path.setAttribute("d", "M688.553 587.447L383.686 851.786c-20.841 18.07-52.391 15.83-70.468-5.003A49.927 49.927 0 0 1 301 814.063V209.936c0-27.58 22.365-49.937 49.955-49.937a49.965 49.965 0 0 1 32.731 12.213l304.867 264.34c41.683 36.141 46.165 99.219 10.01 140.887a99.891 99.891 0 0 1-10.01 10.007z");
     path.setAttribute("fill", "#fff");
     svg.appendChild(path);
     return svg;
@@ -355,7 +355,7 @@ exports.defaultOptions = {
     renderChanges: false,
     renderComments: false,
     renderOutline: false,
-    renderTitleNumbering: true,
+    renderNumbering: true,
 };
 function praseAsync(data, userOptions = null) {
     const ops = { ...exports.defaultOptions, ...userOptions };
@@ -476,6 +476,9 @@ class DocumentParser {
                     break;
                 case "sdt":
                     children.push(...this.parseSdt(elem, e => this.parseBodyElements(e)));
+                    break;
+                case "commentRangeEnd":
+                    children.push((0, comments_1.parseCommentRangeEnd)(elem, xml_parser_1.default));
                     break;
             }
         }
@@ -1932,7 +1935,8 @@ function parseBookmarkStart(elem, xml) {
         id: xml.attr(elem, "id"),
         name: xml.attr(elem, "name"),
         colFirst: xml.intAttr(elem, "colFirst"),
-        colLast: xml.intAttr(elem, "colLast")
+        colLast: xml.intAttr(elem, "colLast"),
+        displacedByCustomXml: xml.attr(elem, "displacedByCustomXml"),
     };
 }
 exports.parseBookmarkStart = parseBookmarkStart;
@@ -2597,8 +2601,7 @@ exports.HtmlRenderer = void 0;
 const dom_1 = __webpack_require__(/*! ./document/dom */ "./src/document/dom.ts");
 const utils_1 = __webpack_require__(/*! ./utils */ "./src/utils.ts");
 const javascript_1 = __webpack_require__(/*! ./javascript */ "./src/javascript.ts");
-const popover_js_1 = __webpack_require__(/*! ./popover.js */ "./src/popover.js");
-const assets_1 = __webpack_require__(/*! ./assets */ "./src/assets/index.ts");
+const index_1 = __webpack_require__(/*! ./assets/index */ "./src/assets/index.ts");
 const ns = {
     svg: "http://www.w3.org/2000/svg",
     mathML: "http://www.w3.org/1998/Math/MathML"
@@ -2623,26 +2626,6 @@ class HtmlRenderer {
         this.allComments = [];
         this.createElement = createElement;
     }
-    processCommentReference(document) {
-        let pArr = document?.documentPart?.body?.children || [];
-        for (let i = pArr.length - 1; i > -1; i--) {
-            let pChildren = pArr[i].children;
-            for (let j = (pChildren?.length || 0) - 1; j > -1; j--) {
-                let child = pChildren?.[j];
-                if (child?.type === dom_1.DomType.CommentRangeEnd) {
-                    child.msg = this.getCommentRangeMsg(pArr, child?.id, i, j);
-                    let newComment = Object.assign(this.processCommentPart(document, child?.id, child), child);
-                    child.author = newComment.author;
-                    child.children = newComment.children;
-                    child.date = newComment.date;
-                    child.noRender = newComment.noRender;
-                    child.paraId = newComment.paraId;
-                    child.text = newComment.text;
-                }
-            }
-        }
-        return null;
-    }
     processCommentPart(document, id, commentReference) {
         let comments = document.commentsPart.comments;
         let commentsEx = document.commentsExtendedPart.commentsEx;
@@ -2664,36 +2647,29 @@ class HtmlRenderer {
         }
         return result;
     }
-    getCommentRangeMsg(pArr, id, iIndex, jIndex) {
-        let result = [];
-        let count = 0;
-        for (let i = iIndex; i > -1; i--) {
-            let pChildren = pArr[i].children;
-            let rIndex = count === 0 ? jIndex : (pChildren?.length || 0) - 1;
-            for (let j = rIndex; j > -1; j--) {
-                let child = pChildren?.[j];
-                if (child?.type === dom_1.DomType.CommentRangeStart && child?.id === id) {
-                    return this.joinRangeText(result);
-                }
-                if (child?.type !== dom_1.DomType.CommentRangeStart && child?.type !== dom_1.DomType.CommentRangeEnd) {
-                    result.push(child);
-                }
-            }
-            count += 1;
-        }
-        return '';
-    }
     joinRangeText(rArr) {
         let result = '';
         for (let i = 0; i < rArr.length; i++) {
             let rChildren = rArr[i]?.children || [];
             for (let child of rChildren) {
                 if (child && child?.type === dom_1.DomType.Text) {
-                    result = child.text + result;
+                    result += child.text;
                 }
             }
         }
         return result;
+    }
+    flatChildren(document, flatedDocument) {
+        let body = document.documentPart.body;
+        function myFlat(elem, flatedDocument) {
+            flatedDocument.push(elem);
+            if (elem.children && elem.children.length > 0) {
+                for (let child of elem.children) {
+                    myFlat(child, flatedDocument);
+                }
+            }
+        }
+        myFlat(body, flatedDocument);
     }
     render(document, bodyContainer, styleContainer = null, options) {
         this.document = document;
@@ -2701,10 +2677,14 @@ class HtmlRenderer {
         this.className = options.className;
         this.rootSelector = options.inWrapper ? `.${this.className}-wrapper` : ':root';
         this.styleMap = null;
+        this.flatedDocument = [];
+        this.commentIndex = 1;
+        this.commentTranslateY = 0;
         styleContainer = styleContainer || bodyContainer;
-        this.processCommentReference(document);
+        this.flatChildren(document, this.flatedDocument);
         removeAllElements(styleContainer);
         removeAllElements(bodyContainer);
+        this.processAllComments();
         appendComment(styleContainer, "docxjs library predefined styles");
         styleContainer.appendChild(this.renderDefaultStyle());
         if (document.themePart) {
@@ -2734,17 +2714,179 @@ class HtmlRenderer {
             this.renderFontTable(document.fontTablePart, styleContainer);
         var sectionElements = this.renderSections(document.documentPart.body);
         if (this.options.inWrapper) {
-            if (this.options.renderOutline) {
-                bodyContainer.appendChild(this.renderOutlineWrapper(this.renderWrapper(sectionElements)));
-            }
-            else {
-                bodyContainer.appendChild(this.renderWrapper(sectionElements));
-            }
+            bodyContainer.appendChild(this.renderOutlineWrapper(this.renderWrapper(sectionElements)));
         }
         else {
             appendChildren(bodyContainer, sectionElements);
         }
         this.refreshTabStops();
+        (this.options.inWrapper && this.options.renderComments) && this.renderCommentElement();
+    }
+    processAllComments() {
+        let commentsEx = this.document.commentsExtendedPart?.commentsEx;
+        let comments = this.document.commentsPart?.comments;
+        if (comments && commentsEx) {
+            for (let commentEx of commentsEx) {
+                if (commentEx.paraIdParent === null) {
+                    this.allComments.push(commentEx.paraId);
+                }
+            }
+        }
+    }
+    renderCommentElement() {
+        if (this.document.commentsPart?.comments) {
+            let wrap = document.getElementsByClassName(`${this.className}-comment-wrap`)[0];
+            for (let paraId of this.allComments) {
+                let commentSupElem = document.getElementById(`${this.className}-comment-start-${paraId}`);
+                let rect = commentSupElem?.getBoundingClientRect();
+                let commentElem = this.createElement("div");
+                commentElem.id = `${this.className}-comment-element-${paraId}`;
+                commentElem.className = `${this.className}-comment-content-wrap`;
+                let that = this;
+                commentElem.addEventListener("mouseenter", e => {
+                    for (let paraId of that.allComments) {
+                        that.inactiveCommentElement(paraId);
+                    }
+                    that.activeCommentElement(paraId);
+                    that.currentComment = paraId;
+                    that.setCurrentCommentText();
+                });
+                commentElem.addEventListener("mouseleave", e => {
+                    for (let paraId of that.allComments) {
+                        that.inactiveCommentElement(paraId);
+                    }
+                });
+                let commentContent = this.renderCommentContent(paraId);
+                if (commentContent !== null) {
+                    commentElem.appendChild(commentContent);
+                }
+                wrap.appendChild(commentElem);
+                if (rect) {
+                    if (rect.y > this.commentTranslateY) {
+                        commentElem.style.top = `${rect.y}px`;
+                    }
+                    else {
+                        commentElem.style.top = `${this.commentTranslateY}px`;
+                    }
+                    let elemRect = commentElem.getBoundingClientRect();
+                    this.commentTranslateY = elemRect.height + elemRect.y + 10;
+                }
+            }
+        }
+    }
+    activeCommentElement(paraId) {
+        let commentElem = document.getElementById(`${this.className}-comment-element-${paraId}`);
+        let commentStart = document.getElementById(`${this.className}-comment-start-${paraId}`);
+        let commentEnd = document.getElementById(`${this.className}-comment-end-${paraId}`);
+        if (commentStart) {
+            commentStart.style.borderRight = "4px solid rgb(252, 13, 27)";
+            commentStart.style.marginRight = "3px";
+        }
+        if (commentEnd) {
+            commentEnd.style.borderLeft = "4px solid rgb(252, 13, 27)";
+            commentEnd.style.marginLeft = "3px";
+            commentEnd.classList.add("active");
+        }
+        if (commentElem) {
+            commentElem.style.borderLeft = "5px solid rgb(252, 13, 27)";
+            commentElem.style.boxShadow = "3px 3px 6px #ccc";
+            commentElem.style.left = "-20px";
+            commentElem.classList.add("active");
+        }
+    }
+    inactiveCommentElement(paraId) {
+        let commentElem = document.getElementById(`${this.className}-comment-element-${paraId}`);
+        let commentStart = document.getElementById(`${this.className}-comment-start-${paraId}`);
+        let commentEnd = document.getElementById(`${this.className}-comment-end-${paraId}`);
+        if (commentStart) {
+            commentStart.style.borderRight = "none";
+            commentStart.style.marginRight = "0";
+        }
+        if (commentEnd) {
+            commentEnd.style.borderLeft = "none";
+            commentEnd.style.marginLeft = "0";
+            commentEnd.classList.remove("active");
+        }
+        if (commentElem) {
+            commentElem.style.borderLeft = "none";
+            commentElem.style.boxShadow = "none";
+            commentElem.style.left = "0";
+            commentElem.classList.remove("active");
+        }
+    }
+    renderCommentContent(paraId) {
+        let comments = this.document.commentsPart?.comments || [];
+        let commentsEx = this.document.commentsExtendedPart?.commentsEx || [];
+        let comment = comments.find(item => {
+            return item.paraId === paraId;
+        });
+        let id = comment?.id;
+        let msg = '';
+        let commentRangeStartIndex = this.flatedDocument.findIndex(item => {
+            return item.type === "commentRangeStart" && item.id === id;
+        });
+        for (let i = commentRangeStartIndex; i < this.flatedDocument.length; i++) {
+            if (this.flatedDocument[i].type === "commentRangeEnd" && this.flatedDocument[i].id === id) {
+                break;
+            }
+            if (this.flatedDocument[i] && this.flatedDocument[i].type === dom_1.DomType.Text) {
+                msg = msg + this.flatedDocument[i].text;
+            }
+        }
+        if (comment) {
+            comment.msg = msg;
+            for (let commentEx of commentsEx) {
+                if (commentEx.paraIdParent === paraId) {
+                    let child = comments.find(item => {
+                        return item.paraId === commentEx.paraId;
+                    });
+                    if (child) {
+                        comment.children.push(child);
+                    }
+                }
+            }
+        }
+        return this.createCommentContentNode(comment);
+    }
+    createCommentContentNode(elem) {
+        let commentsContainer = this.createElement("div");
+        let commentContainer = this.createCommentNode(elem);
+        if (commentContainer) {
+            commentsContainer.appendChild(commentContainer);
+        }
+        return commentsContainer;
+    }
+    createCommentNode(elem) {
+        if (!elem) {
+            return null;
+        }
+        let commentContainer = this.createElement("div");
+        let author = this.createElement("span");
+        author.style.marginRight = "10px";
+        author.style.fontSize = "13px";
+        author.textContent = elem.author;
+        let date = this.createElement("span");
+        date.style.fontSize = "13px";
+        date.textContent = elem.date?.replace('T', ' ')?.replace('Z', '');
+        let text = this.createElement("div");
+        text.style.width = "270px";
+        text.style.margin = "3px 0 5px";
+        text.style.fontSize = "14px";
+        text.textContent = elem.text;
+        commentContainer.appendChild(author);
+        commentContainer.appendChild(date);
+        commentContainer.appendChild(text);
+        if (elem?.children?.length > 0) {
+            let childCommentContainer = this.createElement("div");
+            childCommentContainer.style.borderLeft = "2px solid #bbbfc4";
+            childCommentContainer.style.paddingLeft = "7px";
+            childCommentContainer.style.marginLeft = "20px";
+            for (let i = 0; i < elem?.children?.length; i++) {
+                childCommentContainer.appendChild(this.createCommentNode(elem?.children?.[i]));
+            }
+            commentContainer.appendChild(childCommentContainer);
+        }
+        return commentContainer;
     }
     renderTheme(themePart, styleContainer) {
         const variables = {};
@@ -3004,8 +3146,10 @@ class HtmlRenderer {
         let outline = this.createOutlineElement();
         let documentContainer = this.createElement("div", { className: `${this.className}-document-container-wrapper` });
         documentContainer.appendChild(child);
+        let documentCommentContainer = this.createElement("div", { className: `${this.className}-document-comment-container-wrapper` });
+        documentCommentContainer.appendChild(documentContainer);
         let collapseBtn = this.createElement("div", { className: `${this.className}-collapse-btn` });
-        collapseBtn.appendChild((0, assets_1.createIconCollapse)());
+        collapseBtn.appendChild((0, index_1.createIconCollapse)());
         collapseBtn.addEventListener("click", function () {
             if (!outline.className.includes("close")) {
                 outline.classList.add("close");
@@ -3020,50 +3164,107 @@ class HtmlRenderer {
         collapseBtnWrapper.appendChild(collapseBtn);
         let commentControler = this.createElement("div", { className: `${this.className}-comment-controler` });
         let currentCommentElem = this.createElement("span", { className: `${this.className}-current-comment` });
+        currentCommentElem.id = `${this.className}-comment-current-index`;
         this.setCurrentCommentText(currentCommentElem);
         let allCommentElem = this.createElement("span", { className: `${this.className}-all-comment` });
         this.setAllCommentText(allCommentElem);
         let that = this;
         let prevComment = this.createElement("span", { className: `${this.className}-prev-comment` });
-        prevComment.appendChild((0, assets_1.createIconPrev)());
-        prevComment.title = "上一条";
+        prevComment.appendChild((0, index_1.createIconPrev)());
+        prevComment.title = "ctrl + ↑";
         prevComment.addEventListener("click", function (e) {
             e.stopPropagation();
-            let index = that.allComments.findIndex(item => { return item === that.currentComment; });
-            if (index > 0) {
-                that.currentComment = that.allComments[index - 1];
-                let wrap = document.getElementsByClassName("docx-wrapper")[0];
-                let anchor = wrap.querySelector(`#docx-comment-${that.currentComment}`);
-                anchor?.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
-                anchor?.click();
-                that.setCurrentCommentText(currentCommentElem);
+            that.handleClickPrevComment();
+        });
+        document.addEventListener("keydown", function (e) {
+            if (e.keyCode === 38 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                e.preventDefault();
+                that.handleClickPrevComment();
             }
         });
         let nextComment = this.createElement("span", { className: `${this.className}-next-comment` });
-        nextComment.appendChild((0, assets_1.createIconPrev)());
-        nextComment.title = "下一条";
+        nextComment.appendChild((0, index_1.createIconPrev)());
+        nextComment.title = "ctrl + ↓";
         nextComment.addEventListener("click", function (e) {
             e.stopPropagation();
-            let index = that.allComments.findIndex(item => { return item === that.currentComment; });
-            if (index < that.allComments.length - 1 && that.allComments.length > 0) {
-                that.currentComment = that.allComments[index + 1];
-                let wrap = document.getElementsByClassName("docx-wrapper")[0];
-                let anchor = wrap.querySelector(`#docx-comment-${that.currentComment}`);
-                anchor?.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
-                anchor?.click();
-                that.setCurrentCommentText(currentCommentElem);
+            that.handleClickNextComment();
+        });
+        document.addEventListener("keydown", function (e) {
+            if (e.keyCode === 40 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                e.preventDefault();
+                that.handleClickNextComment();
             }
         });
         commentControler.appendChild(currentCommentElem);
         commentControler.appendChild(allCommentElem);
         commentControler.appendChild(prevComment);
         commentControler.appendChild(nextComment);
-        let outlineWrapper = this.createElement("div", { className: `${this.className}-outline-wrapper` }, [outline, collapseBtnWrapper, documentContainer, commentControler]);
+        let commentWrap = this.createElement("div", { className: `${this.className}-comment-wrap` });
+        commentWrap.appendChild(commentControler);
+        let renderers = [documentCommentContainer];
+        if (this.options.renderOutline) {
+            renderers.unshift(collapseBtnWrapper);
+            renderers.unshift(outline);
+        }
+        if (this.options.renderComments) {
+            documentCommentContainer.appendChild(commentWrap);
+        }
+        let outlineWrapper = this.createElement("div", { className: `${this.className}-outline-wrapper` }, renderers);
         return outlineWrapper;
     }
-    setCurrentCommentText(elem) {
+    handleClickPrevComment() {
         let index = this.allComments.findIndex(item => { return item === this.currentComment; });
-        elem.textContent = `评论（${index + 1}/`;
+        if (index > 0) {
+            this.currentComment = this.allComments[index - 1];
+        }
+        else if (index === 0) {
+            this.currentComment = this.allComments[this.allComments.length - 1];
+        }
+        else {
+            return;
+        }
+        let wrap = document.getElementsByClassName(`${this.className}-comment-wrap`)[0];
+        let anchor = wrap.querySelector(`#${this.className}-comment-element-${this.currentComment}`);
+        anchor?.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+        anchor.click();
+        this.setCurrentCommentText();
+        for (let paraId of this.allComments) {
+            this.inactiveCommentElement(paraId);
+        }
+        this.activeCommentElement(this.currentComment);
+    }
+    handleClickNextComment() {
+        let index = this.allComments.findIndex(item => { return item === this.currentComment; });
+        if (index < this.allComments.length - 1 && this.allComments.length > 0) {
+            this.currentComment = this.allComments[index + 1];
+        }
+        else if (index === this.allComments.length - 1 && this.allComments.length > 0) {
+            this.currentComment = this.allComments[0];
+        }
+        else {
+            return;
+        }
+        let wrap = document.getElementsByClassName(`${this.className}-comment-wrap`)[0];
+        let anchor = wrap.querySelector(`#${this.className}-comment-element-${this.currentComment}`);
+        anchor?.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+        anchor.click();
+        this.setCurrentCommentText();
+        for (let paraId of this.allComments) {
+            this.inactiveCommentElement(paraId);
+        }
+        this.activeCommentElement(this.currentComment);
+    }
+    setCurrentCommentText(currentElem) {
+        let elem = document.getElementById(`${this.className}-comment-current-index`);
+        let index = this.allComments.findIndex(item => { return item === this.currentComment; });
+        if (currentElem) {
+            currentElem.textContent = `评论（${index + 1}/`;
+        }
+        else {
+            if (elem) {
+                elem.textContent = `评论（${index + 1}/`;
+            }
+        }
     }
     setAllCommentText(elem) {
         elem.textContent = `${this.allComments.length}）`;
@@ -3071,26 +3272,37 @@ class HtmlRenderer {
     createOutlineElement() {
         let outlineContainer = this.createElement("div", { className: `${this.className}-outline-container` });
         let outlineContent = this.createElement("div", { className: `${this.className}-outline-content` });
-        let pArr = this.document.documentPart?.body?.children;
+        let pArr = this.document.documentPart.body.children;
         for (let p of pArr) {
-            if (!isNaN(Number(p.styleName)) && Number(p.styleName) !== 0) {
-                let ref;
-                for (let child of p.children || []) {
-                    if (child.type === "bookmarkStart" || child.type === "bookmarkEnd") {
-                        let c = child;
-                        ref = c.name;
-                        break;
+            if (p.type === dom_1.DomType.Paragraph) {
+                let pChildren = p.children ?? [];
+                for (let i = 0; i < pChildren.length; i++) {
+                    let child = pChildren[i];
+                    if (child.type === dom_1.DomType.BookmarkStart && child.name?.startsWith("_Toc") && !child.displacedByCustomXml) {
+                        let endIndex = pChildren.findIndex(item => {
+                            return item.type === dom_1.DomType.BookmarkEnd && item.id === child.id;
+                        });
+                        if (endIndex > -1) {
+                            let title = this.joinRangeText(pChildren);
+                            if (title.length > 30) {
+                                break;
+                            }
+                            let result = this.createElement("p");
+                            result.style.marginLeft = `${16}px`;
+                            result.style.fontSize = '14px';
+                            result.style.lineHeight = '20px';
+                            result.textContent = title;
+                            let that = this;
+                            result.addEventListener("click", function () {
+                                let wrap = document.getElementsByClassName(`${that.className}-wrapper`)[0];
+                                let anchor = wrap.querySelector(`#${child.name}`);
+                                anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+                            });
+                            outlineContent.appendChild(result);
+                            break;
+                        }
                     }
                 }
-                let result = this.createElement("p");
-                result.style.marginLeft = `${16}px`;
-                this.renderChildren(p, result);
-                result.addEventListener("click", function () {
-                    let wrap = document.getElementsByClassName("docx-wrapper")[0];
-                    let anchor = wrap.querySelector(`#${ref}`);
-                    anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-                });
-                outlineContent.appendChild(result);
             }
         }
         outlineContainer.appendChild(outlineContent);
@@ -3101,14 +3313,23 @@ class HtmlRenderer {
         var styleText = `
 .${c}-wrapper { background: gray; padding: 30px; padding-bottom: 0px; display: flex; flex-flow: column; align-items: center; flex: 1; } 
 .${c}-outline-wrapper { display: flex; height: 100%; }
-.${c}-document-container-wrapper { flex-grow: 1; height: 100%; overflow: auto; }
+.${c}-document-comment-container-wrapper { flex-grow: 1; height: 100%; overflow: auto; display: flex; background: gray; counter-reset: ${c}-comment-range-end-counter 0; }
+.${c}-document-container-wrapper { flex-grow: 1; }
+.${c}-collapse-comment-btn-wrapper { position: sticky; top: 0; }
+.${c}-comment-wrap { position: relative; width: 340px; counter-reset: ${c}-comment-counter 0;}
+.${c}-comment-range-end { counter-increment: ${c}-comment-range-end-counter; }
+.${c}-comment-range-end.active::after { content: ""counter(${c}-comment-range-end-counter, decimal)""; color: rgb(252, 13, 27); font-size: 16px; font-weight: 600; margin-left: 3px;}
+.${c}-comment-content-wrap { counter-increment: ${c}-comment-counter; position: absolute; left: 0; width: 300px; padding: 15px; margin-right: 5px; z-index: 998; background-color: #fff; border-radius: 5px; text-align: start; cursor: pointer;}
+.${c}-comment-content-wrap.active::before {content: ""counter(${c}-comment-counter, decimal)""; position: absolute; left: -26px; top: -2px; color: #fff; font-weight: 600; font-size: 20px;}
+.${c}-comment-controler { position: fixed; top: 5px; right: 25px; background: #fff; min-width: 200px; 
+	height: 35px; display: flex; align-items: center; border-radius: 4px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); z-index: 999; }
 .${c}-outline-container { background: white; width: 300px; height: 100%; overflow: auto; transition: width .5s ease; }
 .${c}-outline-container.close { width: 0 }
-.${c}-collapse-btn-wrapper { width: 2em; height: 100%; background: gray; }
-.${c}-collapse-btn { width: 2em; height: 2em; background: gray; object-fit: contain; cursor: pointer; }
-.${c}-collapse-btn.close { transform: rotate(-90deg); transition: transform .8s ease-out; }
+.${c}-collapse-btn-wrapper { width: 1.5em; height: 100%; background: gray; }
+.${c}-collapse-btn { transform: rotate(90deg); width: 1.5em; height: 1.5em; background: gray; object-fit: contain; cursor: pointer; transition: transform .8s ease-out; }
+.${c}-collapse-btn.close { transform: rotate(0deg); transition: transform .8s ease-out; }
 .${c}-outline-content { background: white; }
-.${c}-outline-content > p { text-align: left; width: 240px; margin-top: 3px; margin-bottom: 3px; margin-right: 30px; cursor: pointer; }
+.${c}-outline-content > p { text-align: left; margin-top: 3px; margin-bottom: 3px; margin-right: 30px; cursor: pointer; }
 .${c}-outline-content > p span { font-size: 12px !important; color: #333; }
 .${c}-wrapper>section.${c} { background: white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); margin-bottom: 30px; }
 .${c} { color: black; hyphens: auto; }
@@ -3120,13 +3341,8 @@ section.${c}>footer { z-index: 1; }
 .${c} p { margin: 0pt; min-height: 1em; }
 .${c} span { white-space: pre-wrap; overflow-wrap: break-word; }
 .${c} a { color: inherit; text-decoration: inherit; }
-.${c}-comment-sup { cursor: pointer; }
-.${c}-comment-sup.unread path { fill: #2A66FF; }
-.${c}-comment-controler { position: fixed; top: 5px; right: 25px; background: #fff; width: 200px; 
-	height: 35px; display: flex; align-items: center; border-radius: 4px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
-	.${c}-prev-comment { margin-left: 15px; }
-.${c}-prev-comment svg { transform: rotate(-90deg); cursor: pointer; }
-.${c}-next-comment svg { transform: rotate(90deg); cursor: pointer; }
+.${c}-prev-comment { margin-left: 10px; transform: rotate(-90deg); cursor: pointer; }
+.${c}-next-comment { margin-right: 10px; transform: rotate(90deg); cursor: pointer; }
 .${c}-prev-comment:hover svg path { fill: #2A66FF; }
 .${c}-next-comment:hover svg path { fill: #2A66FF; }
 .${c}-all-comment { height: 22px; line-height: 19px; padding-right: 10px; border-right: 1px solid #ddd; color: gray; }
@@ -3476,8 +3692,10 @@ section.${c}>footer { z-index: 1; }
                 return this.renderInserted(elem);
             case dom_1.DomType.Deleted:
                 return this.renderDeleted(elem);
+            case dom_1.DomType.CommentRangeStart:
+                return this.renderCommentRangeStart(elem);
             case dom_1.DomType.CommentRangeEnd:
-                return this.renderCommentReference(elem);
+                return this.renderCommentRangeEnd(elem);
         }
         return null;
     }
@@ -3526,11 +3744,12 @@ section.${c}>footer { z-index: 1; }
                     break;
                 }
             }
-            result.textContent = this.joinRangeText(textArr.reverse());
+            result.textContent = this.joinRangeText(textArr);
             result.style.cursor = "pointer";
+            let that = this;
             result.addEventListener("click", function () {
                 let ref = text.split(' ')[1];
-                let wrap = document.getElementsByClassName("docx-wrapper")[0];
+                let wrap = document.getElementsByClassName(`${that.className}-wrapper`)[0];
                 let anchor = wrap.querySelector(`#${ref}`);
                 anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
             });
@@ -3538,73 +3757,32 @@ section.${c}>footer { z-index: 1; }
         }
         return null;
     }
-    renderCommentReference(elem) {
-        if (!elem.noRender && this.options.renderComments) {
-            let supNode = this.createCommentSupNode();
-            supNode.id = `${this.className}-comment-${elem.paraId}`;
-            supNode.addEventListener("click", () => {
-                supNode.classList.remove("unread");
-                let children = this.createCommentContentNode(elem);
-                (0, popover_js_1.default)(elem.paraId, supNode, children);
-            });
-            return supNode;
+    renderCommentRangeStart(elem) {
+        let comments = this.document.commentsPart.comments;
+        let commentsEx = this.document.commentsExtendedPart.commentsEx;
+        let paraId = comments.find(item => { return item.id === elem.id; })?.paraId;
+        let paraIdParent = commentsEx.find(item => { return item.paraId === paraId; })?.paraIdParent;
+        if (paraIdParent) {
+            return null;
         }
-        return null;
+        return this.createCommentSupNode('start', paraId);
     }
-    createCommentContentNode(elem) {
-        let commentsContainer = this.createElement("div");
-        let msgContainer = this.createElement("div");
-        msgContainer.textContent = elem.msg;
-        msgContainer.style.textOverflow = "ellipsis";
-        msgContainer.style.whiteSpace = "nowrap";
-        msgContainer.style.overflow = "hidden";
-        msgContainer.style.paddingLeft = "5px";
-        msgContainer.style.borderLeft = "2px solid #bbbfc4";
-        msgContainer.style.width = "300px";
-        msgContainer.style.fontSize = "14px";
-        msgContainer.style.color = "#646a73";
-        msgContainer.title = elem.msg;
-        let commentContainer = this.createCommentNode(elem);
-        commentsContainer.appendChild(msgContainer);
-        commentsContainer.appendChild(commentContainer);
-        return commentsContainer;
-    }
-    createCommentNode(elem) {
-        let commentContainer = this.createElement("div");
-        let author = this.createElement("span");
-        author.style.marginRight = "10px";
-        author.style.fontSize = "13px";
-        author.textContent = elem.author;
-        let date = this.createElement("span");
-        date.style.fontSize = "13px";
-        date.textContent = elem.date?.replace('T', ' ')?.replace('Z', '');
-        let text = this.createElement("div");
-        text.style.width = "200px";
-        text.style.margin = "3px 0 5px";
-        text.style.fontSize = "14px";
-        text.textContent = elem.text;
-        commentContainer.appendChild(author);
-        commentContainer.appendChild(date);
-        commentContainer.appendChild(text);
-        if (elem?.children?.length > 0) {
-            let childCommentContainer = this.createElement("div");
-            childCommentContainer.style.borderLeft = "2px solid #bbbfc4";
-            childCommentContainer.style.paddingLeft = "7px";
-            childCommentContainer.style.marginLeft = "20px";
-            for (let i = 0; i < elem?.children?.length; i++) {
-                childCommentContainer.appendChild(this.createCommentNode(elem?.children?.[i]));
-            }
-            commentContainer.appendChild(childCommentContainer);
+    renderCommentRangeEnd(elem) {
+        let comments = this.document.commentsPart.comments;
+        let commentsEx = this.document.commentsExtendedPart.commentsEx;
+        let paraId = comments.find(item => { return item.id === elem.id; })?.paraId;
+        let paraIdParent = commentsEx.find(item => { return item.paraId === paraId; })?.paraIdParent;
+        if (paraIdParent) {
+            return null;
         }
-        return commentContainer;
+        let endElem = this.createCommentSupNode('end', paraId);
+        endElem.className = `${this.className}-comment-range-end`;
+        return endElem;
     }
-    createCommentSupNode() {
-        let elem = this.createElement("sup");
-        let img = (0, assets_1.createIconPinglun)();
-        elem.classList.add(`${this.className}-comment-sup`);
-        elem.classList.add("unread");
-        elem.appendChild(img);
-        elem.style.padding = "0 0 0 2pt";
+    createCommentSupNode(type, paraId) {
+        let elem = this.createElement("span");
+        elem.id = `${this.className}-comment-${type}-${paraId}`;
+        this.commentIndex += 1;
         return elem;
     }
     renderChildren(elem, into) {
@@ -3633,7 +3811,7 @@ section.${c}>footer { z-index: 1; }
         this.renderStyleValues(elem.cssStyle, result);
         this.renderCommonProperties(result.style, elem);
         const numbering = elem.numbering ?? style?.paragraphProps?.numbering;
-        if (this.options.renderTitleNumbering && numbering && !isNaN(Number(elem.styleName)) && Number(elem.styleName) !== 0 && Number(elem.styleName) < 4 && elem?.numbering?.id !== '0') {
+        if (this.options.renderNumbering && numbering && !isNaN(Number(elem.styleName)) && Number(elem.styleName) !== 0 && Number(elem.styleName) < 4 && elem?.numbering?.id !== '0') {
             let titleLevel = elem.styleName;
             if (elem.numbering && elem.numbering.level !== undefined && elem.numbering.level !== null && (elem.numbering.level > (Number(titleLevel) - 1))) {
                 titleLevel = `${elem.numbering.level}`;
@@ -3644,7 +3822,7 @@ section.${c}>footer { z-index: 1; }
             result.classList.add(this.numberingTitleClass(Number(titleLevel)));
             return result;
         }
-        if (numbering && !elem.noRenderNumbering) {
+        if (this.options.renderNumbering && numbering && !elem.noRenderNumbering) {
             let numberingPart = this.document.numberingPart.numberings;
             let currentNumbering = numberingPart.find(item => {
                 return item.id === numbering.id;
@@ -3678,8 +3856,9 @@ section.${c}>footer { z-index: 1; }
         this.renderStyleValues(elem.cssStyle, result);
         if (elem.href) {
             result.style.cursor = "pointer";
+            let that = this;
             result.addEventListener("click", function (e) {
-                let wrap = document.getElementsByClassName("docx-wrapper")[0];
+                let wrap = document.getElementsByClassName(`${that.className}-wrapper`)[0];
                 let anchor = wrap.querySelector(`#${elem?.href?.replace("#", '')}`);
                 anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
             });
@@ -3764,7 +3943,7 @@ section.${c}>footer { z-index: 1; }
             for (let p of pArr) {
                 rArr = rArr.concat(p?.children || []);
             }
-            let result = this.joinRangeText(rArr.reverse());
+            let result = this.joinRangeText(rArr);
             return result;
         }
         return '';
@@ -4525,7 +4704,7 @@ exports.serializeXmlString = serializeXmlString;
 class XmlParser {
     elements(elem, localName = null) {
         const result = [];
-        for (let i = 0, l = elem.childNodes.length; i < l; i++) {
+        for (let i = 0, l = elem?.childNodes.length || 0; i < l; i++) {
             let c = elem.childNodes.item(i);
             if (c.nodeType == 1 && (localName == null || c.localName == localName))
                 result.push(c);
@@ -4533,7 +4712,7 @@ class XmlParser {
         return result;
     }
     element(elem, localName) {
-        for (let i = 0, l = elem.childNodes.length; i < l; i++) {
+        for (let i = 0, l = elem?.childNodes.length || 0; i < l; i++) {
             let c = elem.childNodes.item(i);
             if (c.nodeType == 1 && c.localName == localName)
                 return c;
@@ -5155,63 +5334,6 @@ exports.deobfuscate = deobfuscate;
 
 /***/ }),
 
-/***/ "./src/popover.js":
-/*!************************!*\
-  !*** ./src/popover.js ***!
-  \************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ createPopover)
-/* harmony export */ });
-
-function createPopover(id, node, children) {
-  let popoverContainer = document.createElement("div");
-  popoverContainer.id = `popover-comment-${id}`;
-  popoverContainer.className = "popover-container";
-  popoverContainer.style.padding = "15px";
-  popoverContainer.style.boxShadow = "3px 3px 8px #ccc";
-  popoverContainer.style.position = "fixed";
-  popoverContainer.style.zIndex = "999";
-  popoverContainer.style.backgroundColor = "#fff";
-  popoverContainer.style.borderRadius = "5px";
-
-  popoverContainer.appendChild(children);
-
-  document.body.appendChild(popoverContainer);
-  
-  let rect = node.getBoundingClientRect();
-  popoverContainer.style.top = `${rect.top - 20}px`;
-  popoverContainer.style.left = `${rect.left + 20}px`;
-
-  var isVisible = true;
-
-  function hidePopover() {
-    isVisible = false;
-    document.body.removeChild(popoverContainer);
-  }
-
-  document.addEventListener('click', function (e) {
-    e.stopPropagation();
-    if (isVisible &&
-        e.target !== popoverContainer &&
-        e.target.parentElement !== popoverContainer &&
-        e.target !== node &&
-        e.target.parentElement !== node
-    ) {
-      hidePopover();
-    }
-  });
-
-  popoverContainer.addEventListener('mouseleave', function (e) {
-    hidePopover();
-  })
-}
-
-
-/***/ }),
-
 /***/ "jszip":
 /*!*******************************************************************************************************!*\
   !*** external {"root":"JSZip","commonjs":"jszip","commonjs2":"jszip","amd":"jszip","module":"jszip"} ***!
@@ -5249,35 +5371,6 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_jszip__;
 /******/ 	// Return the exports of the module
 /******/ 	return module.exports;
 /******/ }
-/******/ 
-/************************************************************************/
-/******/ /* webpack/runtime/define property getters */
-/******/ (() => {
-/******/ 	// define getter functions for harmony exports
-/******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		for(var key in definition) {
-/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 			}
-/******/ 		}
-/******/ 	};
-/******/ })();
-/******/ 
-/******/ /* webpack/runtime/hasOwnProperty shorthand */
-/******/ (() => {
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ })();
-/******/ 
-/******/ /* webpack/runtime/make namespace object */
-/******/ (() => {
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/ })();
 /******/ 
 /************************************************************************/
 /******/ 

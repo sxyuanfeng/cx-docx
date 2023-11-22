@@ -157,7 +157,7 @@ export interface IComment {
     text: string,
     author: string,
     date: string,
-    children: [],
+    children: IComment[],
     noRender: boolean,
     type: string
 }
