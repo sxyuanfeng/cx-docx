@@ -19,8 +19,6 @@ Add:
 Usage
 -----
 ```html
-<!--optional polyfill for promise-->
-<script src="https://unpkg.com/promise-polyfill/dist/polyfill.min.js"></script>
 <!--lib uses jszip-->
 <script src="https://unpkg.com/jszip/dist/jszip.min.js"></script>
 <script src="cx-docx.min.js"></script>

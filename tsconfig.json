@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": false,
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "pretty": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "noEmitHelpers": false,
+    "importHelpers": false,
+    "target": "ES2015",
+    "outDir": "dist",
+    "lib": [
+      "ES2017",
+      "dom"
+    ],
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -1236,7 +1236,7 @@ export class DocumentParser {
 					break;
 
 				case "smallCaps":
-					style["text-transform"] = xml.boolAttr(c, "val", true) ? "lowercase" : "none";
+					style["font-variant"] = xml.boolAttr(c, "val", true) ? "small-caps" : "none";
 					break;
 
 				case "u":
@@ -1364,16 +1364,16 @@ export class DocumentParser {
 			case "dashLongHeavy":
 			case "dotDash":
 			case "dotDotDash":
-				style["text-decoration-style"] = "dashed";
+				style["text-decoration"] = "underline dashed";
 				break;
 
 			case "dotted":
 			case "dottedHeavy":
-				style["text-decoration-style"] = "dotted";
+				style["text-decoration"] = "underline dotted";
 				break;
 
 			case "double":
-				style["text-decoration-style"] = "double";
+				style["text-decoration"] = "underline double";
 				break;
 
 			case "single":
@@ -1384,7 +1384,7 @@ export class DocumentParser {
 			case "wave":
 			case "wavyDouble":
 			case "wavyHeavy":
-				style["text-decoration-style"] = "wavy";
+				style["text-decoration"] = "underline wavy";
 				break;
 
 			case "words":

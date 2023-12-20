@@ -601,6 +601,18 @@ export class HtmlRenderer {
 				this.usedHederFooterParts.push(part.path);
 			}
 			this.renderElements([part.rootElement], into);
+			const [el] = this.renderElements([part.rootElement], into) as HTMLElement[];
+
+			if (props?.pageMargins) {
+				if (part.rootElement.type === DomType.Header) {
+					el.style.marginTop = `calc(${props.pageMargins.header} - ${props.pageMargins.top})`;
+					el.style.minHeight = `calc(${props.pageMargins.top} - ${props.pageMargins.header})`;
+				}
+				else if (part.rootElement.type === DomType.Footer) {
+					el.style.marginBottom = `calc(${props.pageMargins.footer} - ${props.pageMargins.bottom})`;
+					el.style.minHeight = `calc(${props.pageMargins.bottom} - ${props.pageMargins.footer})`;
+				}
+			}
 			this.currentPart = null;
 		}
 	}
@@ -908,7 +920,7 @@ export class HtmlRenderer {
 .${c}-outline-content > p { text-align: left; margin-top: 3px; margin-bottom: 3px; margin-right: 30px; cursor: pointer; }
 .${c}-outline-content > p span { font-size: 12px !important; color: #333; }
 .${c}-wrapper>section.${c} { background: white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); margin-bottom: 30px; }
-.${c} { color: black; hyphens: auto; }
+.${c} { color: black; hyphens: auto; text-underline-position: from-font; }
 section.${c} { box-sizing: border-box; display: flex; flex-flow: column nowrap; position: relative; overflow: hidden; }
 section.${c}>article { margin-bottom: auto; z-index: 1; }
 section.${c}>footer { z-index: 1; }

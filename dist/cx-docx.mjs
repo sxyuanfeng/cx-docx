@@ -1,16 +1,5 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("jszip"));
-	else if(typeof define === 'function' && define.amd)
-		define("docx", ["jszip"], factory);
-	else if(typeof exports === 'object')
-		exports["docx"] = factory(require("jszip"));
-	else
-		root["docx"] = factory(root["JSZip"]);
-})(globalThis, (__WEBPACK_EXTERNAL_MODULE_jszip__) => {
-return /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
+import * as __WEBPACK_EXTERNAL_MODULE_jszip__ from "jszip";
+/******/ var __webpack_modules__ = ({
 
 /***/ "./src/assets/index.ts":
 /*!*****************************!*\
@@ -202,9 +191,18 @@ exports.parseCommentEx = parseCommentEx;
 /*!****************************************!*\
   !*** ./src/common/open-xml-package.ts ***!
   \****************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OpenXmlPackage = void 0;
 const JSZip = __webpack_require__(/*! jszip */ "jszip");
@@ -223,24 +221,29 @@ class OpenXmlPackage {
     update(path, content) {
         this._zip.file(path, content);
     }
-    static async load(input, options) {
-        const zip = await JSZip.loadAsync(input);
-        return new OpenXmlPackage(zip, options);
+    static load(input, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const zip = yield JSZip.loadAsync(input);
+            return new OpenXmlPackage(zip, options);
+        });
     }
     save(type = "blob") {
         return this._zip.generateAsync({ type });
     }
     load(path, type = "string") {
-        return this.get(path)?.async(type) ?? Promise.resolve(null);
+        var _a, _b;
+        return (_b = (_a = this.get(path)) === null || _a === void 0 ? void 0 : _a.async(type)) !== null && _b !== void 0 ? _b : Promise.resolve(null);
     }
-    async loadRelationships(path = null) {
-        let relsPath = `_rels/.rels`;
-        if (path != null) {
-            const [f, fn] = (0, utils_1.splitPath)(path);
-            relsPath = `${f}_rels/${fn}.rels`;
-        }
-        const txt = await this.load(relsPath);
-        return txt ? (0, relationship_1.parseRelationships)(this.parseXmlDocument(txt).firstElementChild, this.xmlParser) : null;
+    loadRelationships(path = null) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let relsPath = `_rels/.rels`;
+            if (path != null) {
+                const [f, fn] = (0, utils_1.splitPath)(path);
+                relsPath = `${f}_rels/${fn}.rels`;
+            }
+            const txt = yield this.load(relsPath);
+            return txt ? (0, relationship_1.parseRelationships)(this.parseXmlDocument(txt).firstElementChild, this.xmlParser) : null;
+        });
     }
     parseXmlDocument(txt) {
         return (0, xml_parser_1.parseXmlString)(txt, this.options.trimXmlDeclaration);
@@ -258,9 +261,18 @@ function normalizePath(path) {
 /*!****************************!*\
   !*** ./src/common/part.ts ***!
   \****************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Part = void 0;
 const xml_parser_1 = __webpack_require__(/*! ../parser/xml-parser */ "./src/parser/xml-parser.ts");
@@ -269,14 +281,16 @@ class Part {
         this._package = _package;
         this.path = path;
     }
-    async load() {
-        this.rels = await this._package.loadRelationships(this.path);
-        const xmlText = await this._package.load(this.path);
-        const xmlDoc = this._package.parseXmlDocument(xmlText);
-        if (this._package.options.keepOrigin) {
-            this._xmlDocument = xmlDoc;
-        }
-        this.parseXml(xmlDoc.firstElementChild);
+    load() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.rels = yield this._package.loadRelationships(this.path);
+            const xmlText = yield this._package.load(this.path);
+            const xmlDoc = this._package.parseXmlDocument(xmlText);
+            if (this._package.options.keepOrigin) {
+                this._xmlDocument = xmlDoc;
+            }
+            this.parseXml(xmlDoc.firstElementChild);
+        });
     }
     save() {
         this._package.update(this.path, (0, xml_parser_1.serializeXmlString)(this._xmlDocument));
@@ -339,11 +353,20 @@ exports.parseRelationships = parseRelationships;
 /*!************************!*\
   !*** ./src/cx-docx.ts ***!
   \************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.renderAsync = exports.praseAsync = exports.defaultOptions = void 0;
+exports.renderAsync = exports.renderDocument = exports.praseAsync = exports.defaultOptions = void 0;
 const word_document_1 = __webpack_require__(/*! ./word-document */ "./src/word-document.ts");
 const document_parser_1 = __webpack_require__(/*! ./document-parser */ "./src/document-parser.ts");
 const html_renderer_1 = __webpack_require__(/*! ./html-renderer */ "./src/html-renderer.ts");
@@ -368,17 +391,23 @@ exports.defaultOptions = {
     renderOutline: false,
     renderNumbering: true,
 };
-function praseAsync(data, userOptions = null) {
-    const ops = { ...exports.defaultOptions, ...userOptions };
+function praseAsync(data, userOptions) {
+    const ops = Object.assign(Object.assign({}, exports.defaultOptions), userOptions);
     return word_document_1.WordDocument.load(data, new document_parser_1.DocumentParser(ops), ops);
 }
 exports.praseAsync = praseAsync;
-async function renderAsync(data, bodyContainer, styleContainer = null, userOptions = null) {
-    const ops = { ...exports.defaultOptions, ...userOptions };
+function renderDocument(document, bodyContainer, styleContainer, userOptions) {
+    const ops = Object.assign(Object.assign({}, exports.defaultOptions), userOptions);
     const renderer = new html_renderer_1.HtmlRenderer(window.document);
-    const doc = await word_document_1.WordDocument.load(data, new document_parser_1.DocumentParser(ops), ops);
-    renderer.render(doc, bodyContainer, styleContainer, ops);
-    return doc;
+    renderer.render(document, bodyContainer, styleContainer, ops);
+}
+exports.renderDocument = renderDocument;
+function renderAsync(data, bodyContainer, styleContainer, userOptions) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const doc = yield praseAsync(data, userOptions);
+        renderDocument(doc, bodyContainer, styleContainer, userOptions);
+        return doc;
+    });
 }
 exports.renderAsync = renderAsync;
 
@@ -439,11 +468,7 @@ const mmlTagMap = {
 };
 class DocumentParser {
     constructor(options) {
-        this.options = {
-            ignoreWidth: false,
-            debug: false,
-            ...options
-        };
+        this.options = Object.assign({ ignoreWidth: false, debug: false }, options);
     }
     parseNotes(xmlDoc, elemName, elemClass) {
         var result = [];
@@ -694,10 +719,10 @@ class DocumentParser {
                     let originAbstractNumberingLevels = abstractNumberings.filter(item => {
                         return item.id === String(override.start);
                     });
-                    let originLevel = originAbstractNumberingLevels?.find(item => {
+                    let originLevel = originAbstractNumberingLevels === null || originAbstractNumberingLevels === void 0 ? void 0 : originAbstractNumberingLevels.find(item => {
                         return item.level === override.level;
                     });
-                    let level = abstractNumberingLevels?.find(item => {
+                    let level = abstractNumberingLevels === null || abstractNumberingLevels === void 0 ? void 0 : abstractNumberingLevels.find(item => {
                         return item.level === override.level;
                     });
                     if (originLevel) {
@@ -813,15 +838,17 @@ class DocumentParser {
         return sdtContent ? parser(sdtContent) : [];
     }
     parseInserted(node, parentParser) {
+        var _a, _b;
         return {
             type: dom_1.DomType.Inserted,
-            children: parentParser(node)?.children ?? []
+            children: (_b = (_a = parentParser(node)) === null || _a === void 0 ? void 0 : _a.children) !== null && _b !== void 0 ? _b : []
         };
     }
     parseDeleted(node, parentParser) {
+        var _a, _b;
         return {
             type: dom_1.DomType.Deleted,
-            children: parentParser(node)?.children ?? []
+            children: (_b = (_a = parentParser(node)) === null || _a === void 0 ? void 0 : _a.children) !== null && _b !== void 0 ? _b : []
         };
     }
     parseParagraph(node) {
@@ -1079,6 +1106,7 @@ class DocumentParser {
         return result;
     }
     checkAlternateContent(elem) {
+        var _a;
         if (elem.localName != 'AlternateContent')
             return elem;
         var choice = xml_parser_1.default.element(elem, "Choice");
@@ -1088,7 +1116,7 @@ class DocumentParser {
             if (supportedNamespaceURIs.includes(namespaceURI))
                 return choice.firstElementChild;
         }
-        return xml_parser_1.default.element(elem, "Fallback")?.firstElementChild;
+        return (_a = xml_parser_1.default.element(elem, "Fallback")) === null || _a === void 0 ? void 0 : _a.firstElementChild;
     }
     parseDrawing(node) {
         for (var n of xml_parser_1.default.elements(node)) {
@@ -1100,6 +1128,7 @@ class DocumentParser {
         }
     }
     parseDrawingWrapper(node) {
+        var _a;
         var result = { type: dom_1.DomType.Drawing, children: [], cssStyle: {} };
         var isAnchor = node.localName == "anchor";
         let wrapType = null;
@@ -1124,7 +1153,7 @@ class DocumentParser {
                         let pos = n.localName == "positionH" ? posX : posY;
                         var alignNode = xml_parser_1.default.element(n, "align");
                         var offsetNode = xml_parser_1.default.element(n, "posOffset");
-                        pos.relative = xml_parser_1.default.attr(n, "relativeFrom") ?? pos.relative;
+                        pos.relative = (_a = xml_parser_1.default.attr(n, "relativeFrom")) !== null && _a !== void 0 ? _a : pos.relative;
                         if (alignNode)
                             pos.align = alignNode.textContent;
                         if (offsetNode)
@@ -1323,12 +1352,13 @@ class DocumentParser {
     }
     parseTableCellProperties(elem, cell) {
         cell.cssStyle = this.parseDefaultProperties(elem, {}, null, c => {
+            var _a;
             switch (c.localName) {
                 case "gridSpan":
                     cell.span = xml_parser_1.default.intAttr(c, "val", null);
                     break;
                 case "vMerge":
-                    cell.verticalMerge = xml_parser_1.default.attr(c, "val") ?? "continue";
+                    cell.verticalMerge = (_a = xml_parser_1.default.attr(c, "val")) !== null && _a !== void 0 ? _a : "continue";
                     break;
                 case "cnfStyle":
                     cell.className = values.classNameOfCnfStyle(c);
@@ -1342,7 +1372,7 @@ class DocumentParser {
     parseDefaultProperties(elem, style = null, childStyle = null, handler = null) {
         style = style || {};
         xmlUtil.foreach(elem, c => {
-            if (handler?.(c))
+            if (handler === null || handler === void 0 ? void 0 : handler(c))
                 return;
             switch (c.localName) {
                 case "jc":
@@ -1390,7 +1420,7 @@ class DocumentParser {
                     style["text-transform"] = xml_parser_1.default.boolAttr(c, "val", true) ? "uppercase" : "none";
                     break;
                 case "smallCaps":
-                    style["text-transform"] = xml_parser_1.default.boolAttr(c, "val", true) ? "lowercase" : "none";
+                    style["font-variant"] = xml_parser_1.default.boolAttr(c, "val", true) ? "small-caps" : "none";
                     break;
                 case "u":
                     this.parseUnderline(c, style);
@@ -1489,14 +1519,14 @@ class DocumentParser {
             case "dashLongHeavy":
             case "dotDash":
             case "dotDotDash":
-                style["text-decoration-style"] = "dashed";
+                style["text-decoration"] = "underline dashed";
                 break;
             case "dotted":
             case "dottedHeavy":
-                style["text-decoration-style"] = "dotted";
+                style["text-decoration"] = "underline dotted";
                 break;
             case "double":
-                style["text-decoration-style"] = "double";
+                style["text-decoration"] = "underline double";
                 break;
             case "single":
             case "thick":
@@ -1505,7 +1535,7 @@ class DocumentParser {
             case "wave":
             case "wavyDouble":
             case "wavyHeavy":
-                style["text-decoration-style"] = "wavy";
+                style["text-decoration"] = "underline wavy";
                 break;
             case "words":
                 style["text-decoration"] = "underline";
@@ -2380,6 +2410,7 @@ var SectionType;
     SectionType["OddPage"] = "oddPage";
 })(SectionType || (exports.SectionType = SectionType = {}));
 function parseSectionProperties(elem, xml = xml_parser_1.default) {
+    var _a, _b;
     var section = {};
     for (let e of xml.elements(elem)) {
         switch (e.localName) {
@@ -2408,10 +2439,10 @@ function parseSectionProperties(elem, xml = xml_parser_1.default) {
                 section.columns = parseColumns(e, xml);
                 break;
             case "headerReference":
-                (section.headerRefs ?? (section.headerRefs = [])).push(parseFooterHeaderReference(e, xml));
+                ((_a = section.headerRefs) !== null && _a !== void 0 ? _a : (section.headerRefs = [])).push(parseFooterHeaderReference(e, xml));
                 break;
             case "footerReference":
-                (section.footerRefs ?? (section.footerRefs = [])).push(parseFooterHeaderReference(e, xml));
+                ((_b = section.footerRefs) !== null && _b !== void 0 ? _b : (section.footerRefs = [])).push(parseFooterHeaderReference(e, xml));
                 break;
             case "titlePg":
                 section.titlePage = xml.boolAttr(e, "val", true);
@@ -2638,6 +2669,7 @@ class HtmlRenderer {
         this.createElement = createElement;
     }
     processCommentPart(document, id, commentReference) {
+        var _a;
         let comments = document.commentsPart.comments;
         let commentsEx = document.commentsExtendedPart.commentsEx;
         let result = Object.assign(comments.find(item => {
@@ -2645,7 +2677,7 @@ class HtmlRenderer {
         }), commentReference);
         result.children = [];
         let children = commentsEx.filter(item => {
-            return item.paraIdParent === result?.paraId;
+            return item.paraIdParent === (result === null || result === void 0 ? void 0 : result.paraId);
         });
         for (let child of children) {
             let comment = comments.find(item => {
@@ -2653,17 +2685,18 @@ class HtmlRenderer {
             });
             result.children.push(comment);
         }
-        if (commentsEx.find(item => { return item.paraId === result.paraId; })?.paraIdParent) {
+        if ((_a = commentsEx.find(item => { return item.paraId === result.paraId; })) === null || _a === void 0 ? void 0 : _a.paraIdParent) {
             result.noRender = true;
         }
         return result;
     }
     joinRangeText(rArr) {
+        var _a;
         let result = '';
         for (let i = 0; i < rArr.length; i++) {
-            let rChildren = rArr[i]?.children || [];
+            let rChildren = ((_a = rArr[i]) === null || _a === void 0 ? void 0 : _a.children) || [];
             for (let child of rChildren) {
-                if (child && child?.type === dom_1.DomType.Text) {
+                if (child && (child === null || child === void 0 ? void 0 : child.type) === dom_1.DomType.Text) {
                     result += child.text;
                 }
             }
@@ -2683,6 +2716,7 @@ class HtmlRenderer {
         myFlat(body, flatedDocument);
     }
     render(document, bodyContainer, styleContainer = null, options) {
+        var _a;
         this.document = document;
         this.options = options;
         this.className = options.className;
@@ -2719,7 +2753,7 @@ class HtmlRenderer {
             this.endnoteMap = (0, utils_1.keyBy)(document.endnotesPart.notes, x => x.id);
         }
         if (document.settingsPart) {
-            this.defaultTabSize = document.settingsPart.settings?.defaultTabStop;
+            this.defaultTabSize = (_a = document.settingsPart.settings) === null || _a === void 0 ? void 0 : _a.defaultTabStop;
         }
         if (!options.ignoreFonts && document.fontTablePart)
             this.renderFontTable(document.fontTablePart, styleContainer);
@@ -2734,8 +2768,9 @@ class HtmlRenderer {
         (this.options.inWrapper && this.options.renderComments) && this.renderCommentElement();
     }
     processAllComments() {
-        let commentsEx = this.document.commentsExtendedPart?.commentsEx;
-        let comments = this.document.commentsPart?.comments;
+        var _a, _b;
+        let commentsEx = (_a = this.document.commentsExtendedPart) === null || _a === void 0 ? void 0 : _a.commentsEx;
+        let comments = (_b = this.document.commentsPart) === null || _b === void 0 ? void 0 : _b.comments;
         if (comments && commentsEx) {
             for (let commentEx of commentsEx) {
                 if (commentEx.paraIdParent === null) {
@@ -2745,11 +2780,12 @@ class HtmlRenderer {
         }
     }
     renderCommentElement() {
-        if (this.document.commentsPart?.comments) {
+        var _a;
+        if ((_a = this.document.commentsPart) === null || _a === void 0 ? void 0 : _a.comments) {
             let wrap = document.getElementsByClassName(`${this.className}-comment-wrap`)[0];
             for (let paraId of this.allComments) {
                 let commentSupElem = document.getElementById(`${this.className}-comment-start-${paraId}`);
-                let rect = commentSupElem?.getBoundingClientRect();
+                let rect = commentSupElem === null || commentSupElem === void 0 ? void 0 : commentSupElem.getBoundingClientRect();
                 let commentElem = this.createElement("div");
                 commentElem.id = `${this.className}-comment-element-${paraId}`;
                 commentElem.className = `${this.className}-comment-content-wrap`;
@@ -2826,12 +2862,13 @@ class HtmlRenderer {
         }
     }
     renderCommentContent(paraId) {
-        let comments = this.document.commentsPart?.comments || [];
-        let commentsEx = this.document.commentsExtendedPart?.commentsEx || [];
+        var _a, _b;
+        let comments = ((_a = this.document.commentsPart) === null || _a === void 0 ? void 0 : _a.comments) || [];
+        let commentsEx = ((_b = this.document.commentsExtendedPart) === null || _b === void 0 ? void 0 : _b.commentsEx) || [];
         let comment = comments.find(item => {
             return item.paraId === paraId;
         });
-        let id = comment?.id;
+        let id = comment === null || comment === void 0 ? void 0 : comment.id;
         let msg = '';
         let commentRangeStartIndex = this.flatedDocument.findIndex(item => {
             return item.type === "commentRangeStart" && item.id === id;
@@ -2868,6 +2905,7 @@ class HtmlRenderer {
         return commentsContainer;
     }
     createCommentNode(elem) {
+        var _a, _b, _c, _d, _e;
         if (!elem) {
             return null;
         }
@@ -2878,7 +2916,7 @@ class HtmlRenderer {
         author.textContent = elem.author;
         let date = this.createElement("span");
         date.style.fontSize = "13px";
-        date.textContent = elem.date?.replace('T', ' ')?.replace('Z', '');
+        date.textContent = (_b = (_a = elem.date) === null || _a === void 0 ? void 0 : _a.replace('T', ' ')) === null || _b === void 0 ? void 0 : _b.replace('Z', '');
         let text = this.createElement("div");
         text.style.width = "270px";
         text.style.margin = "3px 0 5px";
@@ -2887,21 +2925,22 @@ class HtmlRenderer {
         commentContainer.appendChild(author);
         commentContainer.appendChild(date);
         commentContainer.appendChild(text);
-        if (elem?.children?.length > 0) {
+        if (((_c = elem === null || elem === void 0 ? void 0 : elem.children) === null || _c === void 0 ? void 0 : _c.length) > 0) {
             let childCommentContainer = this.createElement("div");
             childCommentContainer.style.borderLeft = "2px solid #bbbfc4";
             childCommentContainer.style.paddingLeft = "7px";
             childCommentContainer.style.marginLeft = "20px";
-            for (let i = 0; i < elem?.children?.length; i++) {
-                childCommentContainer.appendChild(this.createCommentNode(elem?.children?.[i]));
+            for (let i = 0; i < ((_d = elem === null || elem === void 0 ? void 0 : elem.children) === null || _d === void 0 ? void 0 : _d.length); i++) {
+                childCommentContainer.appendChild(this.createCommentNode((_e = elem === null || elem === void 0 ? void 0 : elem.children) === null || _e === void 0 ? void 0 : _e[i]));
             }
             commentContainer.appendChild(childCommentContainer);
         }
         return commentContainer;
     }
     renderTheme(themePart, styleContainer) {
+        var _a, _b;
         const variables = {};
-        const fontScheme = themePart.theme?.fontScheme;
+        const fontScheme = (_a = themePart.theme) === null || _a === void 0 ? void 0 : _a.fontScheme;
         if (fontScheme) {
             if (fontScheme.majorFont) {
                 variables['--docx-majorHAnsi-font'] = fontScheme.majorFont.latinTypeface;
@@ -2910,7 +2949,7 @@ class HtmlRenderer {
                 variables['--docx-minorHAnsi-font'] = fontScheme.minorFont.latinTypeface;
             }
         }
-        const colorScheme = themePart.theme?.colorScheme;
+        const colorScheme = (_b = themePart.theme) === null || _b === void 0 ? void 0 : _b.colorScheme;
         if (colorScheme) {
             for (let [k, v] of Object.entries(colorScheme.colors)) {
                 variables[`--docx-${k}-color`] = `#${v}`;
@@ -2957,7 +2996,7 @@ class HtmlRenderer {
                         this.copyStyleProperties(baseValues.values, styleValues.values);
                     }
                     else {
-                        style.styles.push({ ...baseValues, values: { ...baseValues.values } });
+                        style.styles.push(Object.assign(Object.assign({}, baseValues), { values: Object.assign({}, baseValues.values) }));
                     }
                 }
             }
@@ -2970,9 +3009,10 @@ class HtmlRenderer {
         return stylesMap;
     }
     prodessNumberings(numberings) {
+        var _a;
         for (let num of numberings.filter(n => n.pStyleName)) {
             const style = this.findStyle(num.pStyleName);
-            if (style?.paragraphProps?.numbering) {
+            if ((_a = style === null || style === void 0 ? void 0 : style.paragraphProps) === null || _a === void 0 ? void 0 : _a.numbering) {
                 style.paragraphProps.numbering.level = num.level;
             }
         }
@@ -3067,11 +3107,10 @@ class HtmlRenderer {
         return result;
     }
     renderHeaderFooter(refs, props, page, firstOfSection, into) {
+        var _a, _b;
         if (!refs)
             return;
-        var ref = (props.titlePage && firstOfSection ? refs.find(x => x.type == "first") : null)
-            ?? (page % 2 == 1 ? refs.find(x => x.type == "even") : null)
-            ?? refs.find(x => x.type == "default");
+        var ref = (_b = (_a = (props.titlePage && firstOfSection ? refs.find(x => x.type == "first") : null)) !== null && _a !== void 0 ? _a : (page % 2 == 1 ? refs.find(x => x.type == "even") : null)) !== null && _b !== void 0 ? _b : refs.find(x => x.type == "default");
         var part = ref && this.document.findPartByRelId(ref.id, this.document.documentPart);
         if (part) {
             this.currentPart = part;
@@ -3080,6 +3119,17 @@ class HtmlRenderer {
                 this.usedHederFooterParts.push(part.path);
             }
             this.renderElements([part.rootElement], into);
+            const [el] = this.renderElements([part.rootElement], into);
+            if (props === null || props === void 0 ? void 0 : props.pageMargins) {
+                if (part.rootElement.type === dom_1.DomType.Header) {
+                    el.style.marginTop = `calc(${props.pageMargins.header} - ${props.pageMargins.top})`;
+                    el.style.minHeight = `calc(${props.pageMargins.top} - ${props.pageMargins.header})`;
+                }
+                else if (part.rootElement.type === dom_1.DomType.Footer) {
+                    el.style.marginBottom = `calc(${props.pageMargins.footer} - ${props.pageMargins.bottom})`;
+                    el.style.minHeight = `calc(${props.pageMargins.bottom} - ${props.pageMargins.footer})`;
+                }
+            }
             this.currentPart = null;
         }
     }
@@ -3091,12 +3141,13 @@ class HtmlRenderer {
         return elem.break == "page";
     }
     splitBySection(elements) {
+        var _a;
         var current = { sectProps: null, elements: [] };
         var result = [current];
         for (let elem of elements) {
             if (elem.type == dom_1.DomType.Paragraph) {
                 const s = this.findStyle(elem.styleName);
-                if (s?.paragraphProps?.pageBreakBefore) {
+                if ((_a = s === null || s === void 0 ? void 0 : s.paragraphProps) === null || _a === void 0 ? void 0 : _a.pageBreakBefore) {
                     current.sectProps = sectProps;
                     current = { sectProps: null, elements: [] };
                     result.push(current);
@@ -3110,7 +3161,8 @@ class HtmlRenderer {
                 var rBreakIndex = -1;
                 if (this.options.breakPages && p.children) {
                     pBreakIndex = p.children.findIndex(r => {
-                        rBreakIndex = r.children?.findIndex(this.isPageBreakElement.bind(this)) ?? -1;
+                        var _a, _b;
+                        rBreakIndex = (_b = (_a = r.children) === null || _a === void 0 ? void 0 : _a.findIndex(this.isPageBreakElement.bind(this))) !== null && _b !== void 0 ? _b : -1;
                         return rBreakIndex != -1;
                     });
                 }
@@ -3124,13 +3176,13 @@ class HtmlRenderer {
                     let splitRun = false;
                     if (pBreakIndex < p.children.length - 1 || splitRun) {
                         var children = elem.children;
-                        var newParagraph = { ...elem, children: children.slice(pBreakIndex) };
+                        var newParagraph = Object.assign(Object.assign({}, elem), { children: children.slice(pBreakIndex) });
                         elem.children = children.slice(0, pBreakIndex);
                         newParagraph.noRenderNumbering = true;
                         current.elements.push(newParagraph);
                         if (splitRun) {
                             let runChildren = breakRun.children;
-                            let newRun = { ...breakRun, children: runChildren.slice(0, rBreakIndex) };
+                            let newRun = Object.assign(Object.assign({}, breakRun), { children: runChildren.slice(0, rBreakIndex) });
                             elem.children.push(newRun);
                             breakRun.children = runChildren.slice(rBreakIndex);
                             console.log(breakRun);
@@ -3236,7 +3288,7 @@ class HtmlRenderer {
         }
         let wrap = document.getElementsByClassName(`${this.className}-comment-wrap`)[0];
         let anchor = wrap.querySelector(`#${this.className}-comment-element-${this.currentComment}`);
-        anchor?.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+        anchor === null || anchor === void 0 ? void 0 : anchor.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
         anchor.click();
         this.setCurrentCommentText();
         for (let paraId of this.allComments) {
@@ -3257,7 +3309,7 @@ class HtmlRenderer {
         }
         let wrap = document.getElementsByClassName(`${this.className}-comment-wrap`)[0];
         let anchor = wrap.querySelector(`#${this.className}-comment-element-${this.currentComment}`);
-        anchor?.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+        anchor === null || anchor === void 0 ? void 0 : anchor.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
         anchor.click();
         this.setCurrentCommentText();
         for (let paraId of this.allComments) {
@@ -3281,15 +3333,16 @@ class HtmlRenderer {
         elem.textContent = `${this.allComments.length}）`;
     }
     createOutlineElement() {
+        var _a, _b;
         let outlineContainer = this.createElement("div", { className: `${this.className}-outline-container` });
         let outlineContent = this.createElement("div", { className: `${this.className}-outline-content` });
         let pArr = this.document.documentPart.body.children;
         for (let p of pArr) {
             if (p.type === dom_1.DomType.Paragraph) {
-                let pChildren = p.children ?? [];
+                let pChildren = (_a = p.children) !== null && _a !== void 0 ? _a : [];
                 for (let i = 0; i < pChildren.length; i++) {
                     let child = pChildren[i];
-                    if (child.type === dom_1.DomType.BookmarkStart && child.name?.startsWith("_Toc") && !child.displacedByCustomXml) {
+                    if (child.type === dom_1.DomType.BookmarkStart && ((_b = child.name) === null || _b === void 0 ? void 0 : _b.startsWith("_Toc")) && !child.displacedByCustomXml) {
                         let endIndex = pChildren.findIndex(item => {
                             return item.type === dom_1.DomType.BookmarkEnd && item.id === child.id;
                         });
@@ -3307,7 +3360,7 @@ class HtmlRenderer {
                             result.addEventListener("click", function () {
                                 let wrap = document.getElementsByClassName(`${that.className}-wrapper`)[0];
                                 let anchor = wrap.querySelector(`#${child.name}`);
-                                anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+                                anchor === null || anchor === void 0 ? void 0 : anchor.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
                             });
                             outlineContent.appendChild(result);
                             break;
@@ -3343,7 +3396,7 @@ class HtmlRenderer {
 .${c}-outline-content > p { text-align: left; margin-top: 3px; margin-bottom: 3px; margin-right: 30px; cursor: pointer; }
 .${c}-outline-content > p span { font-size: 12px !important; color: #333; }
 .${c}-wrapper>section.${c} { background: white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); margin-bottom: 30px; }
-.${c} { color: black; hyphens: auto; }
+.${c} { color: black; hyphens: auto; text-underline-position: from-font; }
 section.${c} { box-sizing: border-box; display: flex; flex-flow: column nowrap; position: relative; overflow: hidden; }
 section.${c}>article { margin-bottom: auto; z-index: 1; }
 section.${c}>footer { z-index: 1; }
@@ -3388,21 +3441,12 @@ section.${c}>footer { z-index: 1; }
                     });
                 }
                 resetCounters.push(counterReset);
-                styleText += this.styleToString(`${selector}:before`, {
-                    "content": this.levelTextToContent(num.levelText, num.suff, num.id, this.numFormatToCssValue(num.format)),
-                    "counter-increment": counter,
-                    ...num.rStyle,
-                });
+                styleText += this.styleToString(`${selector}:before`, Object.assign({ "content": this.levelTextToContent(num.levelText, num.suff, num.id, this.numFormatToCssValue(num.format)), "counter-increment": counter }, num.rStyle));
             }
             else {
                 listStyleType = this.numFormatToCssValue(num.format);
             }
-            styleText += this.styleToString(selector, {
-                "display": "list-item",
-                "list-style-position": "inside",
-                "list-style-type": listStyleType,
-                ...num.pStyle
-            });
+            styleText += this.styleToString(selector, Object.assign({ "display": "list-item", "list-style-position": "inside", "list-style-type": listStyleType }, num.pStyle));
         }
         if (resetCounters.length > 0) {
             styleText += this.styleToString(this.rootSelector, {
@@ -3412,10 +3456,11 @@ section.${c}>footer { z-index: 1; }
         return createStyleElement(styleText);
     }
     renderTitleNumbering(pArr, domNumberings, styleContainer) {
+        var _a, _b;
         let styleText = "";
         let resetCounters = [];
         for (let p of pArr) {
-            if (!isNaN(Number(p.styleName)) && Number(p.styleName) !== 0 && p?.numbering?.id !== '0') {
+            if (!isNaN(Number(p.styleName)) && Number(p.styleName) !== 0 && ((_a = p === null || p === void 0 ? void 0 : p.numbering) === null || _a === void 0 ? void 0 : _a.id) !== '0') {
                 let titleLevel = p.styleName;
                 const style = this.findStyle(p.styleName);
                 let numbering = p.numbering;
@@ -3425,7 +3470,7 @@ section.${c}>footer { z-index: 1; }
                 else {
                     titleLevel = Number(titleLevel - 1);
                 }
-                numbering = numbering ?? style?.paragraphProps?.numbering;
+                numbering = numbering !== null && numbering !== void 0 ? numbering : (_b = style === null || style === void 0 ? void 0 : style.paragraphProps) === null || _b === void 0 ? void 0 : _b.numbering;
                 if (numbering === undefined || numbering === null) {
                     continue;
                 }
@@ -3455,21 +3500,12 @@ section.${c}>footer { z-index: 1; }
                         });
                     }
                     resetCounters.push(counterReset);
-                    styleText += this.styleToString(`${selector}:before`, {
-                        "content": this.levelTextToContentOfTitle(currentDomNumbering.levelText, currentDomNumbering.suff, this.numFormatToCssValue(currentDomNumbering.format)),
-                        "counter-increment": counter,
-                        ...currentDomNumbering.rStyle,
-                    });
+                    styleText += this.styleToString(`${selector}:before`, Object.assign({ "content": this.levelTextToContentOfTitle(currentDomNumbering.levelText, currentDomNumbering.suff, this.numFormatToCssValue(currentDomNumbering.format)), "counter-increment": counter }, currentDomNumbering.rStyle));
                 }
                 else {
                     listStyleType = this.numFormatToCssValue(currentDomNumbering.format);
                 }
-                styleText += this.styleToString(selector, {
-                    "display": "list-item",
-                    "list-style-position": "inside",
-                    "list-style-type": listStyleType,
-                    ...currentDomNumbering.pStyle
-                });
+                styleText += this.styleToString(selector, Object.assign({ "display": "list-item", "list-style-position": "inside", "list-style-type": listStyleType }, currentDomNumbering.pStyle));
             }
         }
         for (var num of domNumberings) {
@@ -3496,21 +3532,12 @@ section.${c}>footer { z-index: 1; }
                     });
                 }
                 resetCounters.push(counterReset);
-                styleText += this.styleToString(`${selector}:before`, {
-                    "content": this.levelTextToContent(num.levelText, num.suff, num.id, this.numFormatToCssValue(num.format)),
-                    "counter-increment": counter,
-                    ...num.rStyle,
-                });
+                styleText += this.styleToString(`${selector}:before`, Object.assign({ "content": this.levelTextToContent(num.levelText, num.suff, num.id, this.numFormatToCssValue(num.format)), "counter-increment": counter }, num.rStyle));
             }
             else {
                 listStyleType = this.numFormatToCssValue(num.format);
             }
-            styleText += this.styleToString(selector, {
-                "display": "list-item",
-                "list-style-position": "inside",
-                "list-style-type": listStyleType,
-                ...num.pStyle
-            });
+            styleText += this.styleToString(selector, Object.assign({ "display": "list-item", "list-style-position": "inside", "list-style-type": listStyleType }, num.pStyle));
         }
         if (resetCounters.length > 0) {
             styleText += this.styleToString(this.rootSelector, {
@@ -3546,21 +3573,12 @@ section.${c}>footer { z-index: 1; }
                     });
                 }
                 resetCounters.push(counterReset);
-                styleText += this.styleToString(`${selector}:before`, {
-                    "content": this.levelTextToContent(num.levelText, num.suff, num.id, this.numFormatToCssValue(num.format)),
-                    "counter-increment": counter,
-                    ...num.rStyle,
-                });
+                styleText += this.styleToString(`${selector}:before`, Object.assign({ "content": this.levelTextToContent(num.levelText, num.suff, num.id, this.numFormatToCssValue(num.format)), "counter-increment": counter }, num.rStyle));
             }
             else {
                 listStyleType = this.numFormatToCssValue(num.format);
             }
-            styleText += this.styleToString(selector, {
-                "display": "list-item",
-                "list-style-position": "inside",
-                "list-style-type": listStyleType,
-                ...num.pStyle
-            });
+            styleText += this.styleToString(selector, Object.assign({ "display": "list-item", "list-style-position": "inside", "list-style-type": listStyleType }, num.pStyle));
         }
         if (resetCounters.length > 0) {
             styleText += this.styleToString(this.rootSelector, {
@@ -3570,6 +3588,7 @@ section.${c}>footer { z-index: 1; }
         return createStyleElement(styleText);
     }
     renderStyles(styles) {
+        var _a;
         var styleText = "";
         const stylesMap = this.styleMap;
         const defautStyles = (0, utils_1.keyBy)(styles.filter(s => s.isDefault), s => s.target);
@@ -3583,7 +3602,7 @@ section.${c}>footer { z-index: 1; }
                     console.warn(`Can't find linked style ${style.linked}`);
             }
             for (const subStyle of subStyles) {
-                var selector = `${style.target ?? ''}.${style.cssName}`;
+                var selector = `${(_a = style.target) !== null && _a !== void 0 ? _a : ''}.${style.cssName}`;
                 if (style.target != subStyle.target)
                     selector += ` ${subStyle.target}`;
                 if (defautStyles[style.target] == style)
@@ -3711,7 +3730,8 @@ section.${c}>footer { z-index: 1; }
         return null;
     }
     renderFieldRun(elem) {
-        for (let child of elem.children ?? []) {
+        var _a;
+        for (let child of (_a = elem.children) !== null && _a !== void 0 ? _a : []) {
             switch (child.type) {
                 case dom_1.DomType.Instruction:
                     return this.renderInstrText(child);
@@ -3721,32 +3741,33 @@ section.${c}>footer { z-index: 1; }
         return null;
     }
     renderInstrText(elem) {
+        var _a, _b;
         let text = elem.text;
         if (text.split(' ')[0] === "REF") {
             let id = Math.random();
             elem.instrTextId = id;
             let result = this.createElement("span");
-            let paragraph = elem.parent?.parent;
+            let paragraph = (_a = elem.parent) === null || _a === void 0 ? void 0 : _a.parent;
             let textArr = [];
-            let rArr = paragraph?.children || [];
-            let index = rArr?.findIndex(item => {
+            let rArr = (paragraph === null || paragraph === void 0 ? void 0 : paragraph.children) || [];
+            let index = rArr === null || rArr === void 0 ? void 0 : rArr.findIndex(item => {
                 let rChildren = item.children;
-                let c = rChildren?.find(c => {
-                    return c?.instrTextId === id;
+                let c = rChildren === null || rChildren === void 0 ? void 0 : rChildren.find(c => {
+                    return (c === null || c === void 0 ? void 0 : c.instrTextId) === id;
                 });
                 if (c !== undefined)
                     return true;
                 return false;
             });
-            for (let i = index; i < rArr?.length || 0; i++) {
-                let rChildren = rArr?.[i]?.children;
-                let child = rChildren?.find(c => {
-                    return c?.type === 'complexField' && c?.charType === 'end';
+            for (let i = index; i < (rArr === null || rArr === void 0 ? void 0 : rArr.length) || 0; i++) {
+                let rChildren = (_b = rArr === null || rArr === void 0 ? void 0 : rArr[i]) === null || _b === void 0 ? void 0 : _b.children;
+                let child = rChildren === null || rChildren === void 0 ? void 0 : rChildren.find(c => {
+                    return (c === null || c === void 0 ? void 0 : c.type) === 'complexField' && (c === null || c === void 0 ? void 0 : c.charType) === 'end';
                 });
                 if (child === undefined) {
-                    if (rArr?.[i].fieldRun !== true) {
-                        textArr.push(rArr?.[i]);
-                        if (rArr?.[i] !== undefined) {
+                    if ((rArr === null || rArr === void 0 ? void 0 : rArr[i].fieldRun) !== true) {
+                        textArr.push(rArr === null || rArr === void 0 ? void 0 : rArr[i]);
+                        if ((rArr === null || rArr === void 0 ? void 0 : rArr[i]) !== undefined) {
                             rArr[i].fieldRun = true;
                         }
                     }
@@ -3762,27 +3783,29 @@ section.${c}>footer { z-index: 1; }
                 let ref = text.split(' ')[1];
                 let wrap = document.getElementsByClassName(`${that.className}-wrapper`)[0];
                 let anchor = wrap.querySelector(`#${ref}`);
-                anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+                anchor === null || anchor === void 0 ? void 0 : anchor.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
             });
             return result;
         }
         return null;
     }
     renderCommentRangeStart(elem) {
+        var _a, _b;
         let comments = this.document.commentsPart.comments;
         let commentsEx = this.document.commentsExtendedPart.commentsEx;
-        let paraId = comments.find(item => { return item.id === elem.id; })?.paraId;
-        let paraIdParent = commentsEx.find(item => { return item.paraId === paraId; })?.paraIdParent;
+        let paraId = (_a = comments.find(item => { return item.id === elem.id; })) === null || _a === void 0 ? void 0 : _a.paraId;
+        let paraIdParent = (_b = commentsEx.find(item => { return item.paraId === paraId; })) === null || _b === void 0 ? void 0 : _b.paraIdParent;
         if (paraIdParent) {
             return null;
         }
         return this.createCommentSupNode('start', paraId);
     }
     renderCommentRangeEnd(elem) {
+        var _a, _b;
         let comments = this.document.commentsPart.comments;
         let commentsEx = this.document.commentsExtendedPart.commentsEx;
-        let paraId = comments.find(item => { return item.id === elem.id; })?.paraId;
-        let paraIdParent = commentsEx.find(item => { return item.paraId === paraId; })?.paraIdParent;
+        let paraId = (_a = comments.find(item => { return item.id === elem.id; })) === null || _a === void 0 ? void 0 : _a.paraId;
+        let paraIdParent = (_b = commentsEx.find(item => { return item.paraId === paraId; })) === null || _b === void 0 ? void 0 : _b.paraIdParent;
         if (paraIdParent) {
             return null;
         }
@@ -3814,15 +3837,16 @@ section.${c}>footer { z-index: 1; }
         return createElementNS(ns, tagName, props, this.renderChildren(elem));
     }
     renderParagraph(elem) {
+        var _a, _b, _c, _d, _e, _f;
         var result = this.createElement("p");
         const style = this.findStyle(elem.styleName);
-        elem.tabs ?? (elem.tabs = style?.paragraphProps?.tabs);
+        (_a = elem.tabs) !== null && _a !== void 0 ? _a : (elem.tabs = (_b = style === null || style === void 0 ? void 0 : style.paragraphProps) === null || _b === void 0 ? void 0 : _b.tabs);
         this.renderClass(elem, result);
         this.renderChildren(elem, result);
         this.renderStyleValues(elem.cssStyle, result);
         this.renderCommonProperties(result.style, elem);
-        const numbering = elem.numbering ?? style?.paragraphProps?.numbering;
-        if (this.options.renderNumbering && numbering && !isNaN(Number(elem.styleName)) && Number(elem.styleName) !== 0 && Number(elem.styleName) < 4 && elem?.numbering?.id !== '0') {
+        const numbering = (_c = elem.numbering) !== null && _c !== void 0 ? _c : (_d = style === null || style === void 0 ? void 0 : style.paragraphProps) === null || _d === void 0 ? void 0 : _d.numbering;
+        if (this.options.renderNumbering && numbering && !isNaN(Number(elem.styleName)) && Number(elem.styleName) !== 0 && Number(elem.styleName) < 4 && ((_e = elem === null || elem === void 0 ? void 0 : elem.numbering) === null || _e === void 0 ? void 0 : _e.id) !== '0') {
             let titleLevel = elem.styleName;
             if (elem.numbering && elem.numbering.level !== undefined && elem.numbering.level !== null && (elem.numbering.level > (Number(titleLevel) - 1))) {
                 titleLevel = `${elem.numbering.level}`;
@@ -3838,10 +3862,10 @@ section.${c}>footer { z-index: 1; }
             let currentNumbering = numberingPart.find(item => {
                 return item.id === numbering.id;
             });
-            result.classList.add(this.numberingClass(currentNumbering?.abstractId, numbering.level));
-            let currentOverride = currentNumbering?.overrides?.find(item => { return item.level === numbering.level; });
+            result.classList.add(this.numberingClass(currentNumbering === null || currentNumbering === void 0 ? void 0 : currentNumbering.abstractId, numbering.level));
+            let currentOverride = (_f = currentNumbering === null || currentNumbering === void 0 ? void 0 : currentNumbering.overrides) === null || _f === void 0 ? void 0 : _f.find(item => { return item.level === numbering.level; });
             if (currentOverride) {
-                let overrideCounter = this.numberingCounter(currentNumbering?.abstractId, numbering.level);
+                let overrideCounter = this.numberingCounter(currentNumbering === null || currentNumbering === void 0 ? void 0 : currentNumbering.abstractId, numbering.level);
                 let overrideCounterReset = overrideCounter + " " + (currentOverride.start ? currentOverride.start - 1 : 0);
                 result.style.counterReset = overrideCounterReset;
             }
@@ -3869,15 +3893,16 @@ section.${c}>footer { z-index: 1; }
             result.style.cursor = "pointer";
             let that = this;
             result.addEventListener("click", function (e) {
+                var _a;
                 let wrap = document.getElementsByClassName(`${that.className}-wrapper`)[0];
-                let anchor = wrap.querySelector(`#${elem?.href?.replace("#", '')}`);
-                anchor?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+                let anchor = wrap.querySelector(`#${(_a = elem === null || elem === void 0 ? void 0 : elem.href) === null || _a === void 0 ? void 0 : _a.replace("#", '')}`);
+                anchor === null || anchor === void 0 ? void 0 : anchor.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
             });
         }
         else if (elem.id) {
             const rel = this.document.documentPart.rels
                 .find(it => it.id == elem.id && it.targetMode === "External");
-            result.href = rel?.target;
+            result.href = rel === null || rel === void 0 ? void 0 : rel.target;
         }
         return result;
     }
@@ -3929,18 +3954,20 @@ section.${c}>footer { z-index: 1; }
         return span;
     }
     renderFootnoteReference(elem) {
+        var _a, _b;
         var result = this.createElement("sup");
         this.currentFootnoteIds.push(elem.id);
         result.textContent = `${this.currentFootnoteIds.length}`;
-        let notes = this.document?.footnotesPart?.notes;
+        let notes = (_b = (_a = this.document) === null || _a === void 0 ? void 0 : _a.footnotesPart) === null || _b === void 0 ? void 0 : _b.notes;
         result.title = this.renderNotePreview(elem.id, notes);
         return result;
     }
     renderEndnoteReference(elem) {
+        var _a, _b;
         var result = this.createElement("sup");
         this.currentEndnoteIds.push(elem.id);
         result.textContent = `${this.currentFootnoteIds.length}`;
-        let notes = this.document?.endnotesPart?.notes;
+        let notes = (_b = (_a = this.document) === null || _a === void 0 ? void 0 : _a.endnotesPart) === null || _b === void 0 ? void 0 : _b.notes;
         result.title = this.renderNotePreview(elem.id, notes);
         return result;
     }
@@ -3952,7 +3979,7 @@ section.${c}>footer { z-index: 1; }
             let rArr = [];
             let pArr = note.children;
             for (let p of pArr) {
-                rArr = rArr.concat(p?.children || []);
+                rArr = rArr.concat((p === null || p === void 0 ? void 0 : p.children) || []);
             }
             let result = this.joinRangeText(rArr);
             return result;
@@ -3960,11 +3987,12 @@ section.${c}>footer { z-index: 1; }
         return '';
     }
     renderTab(elem) {
+        var _a;
         var tabSpan = this.createElement("span");
         tabSpan.innerHTML = "&emsp;";
         if (this.options.experimental) {
             tabSpan.className = this.tabStopClass();
-            var stops = findParent(elem, dom_1.DomType.Paragraph)?.tabs;
+            var stops = (_a = findParent(elem, dom_1.DomType.Paragraph)) === null || _a === void 0 ? void 0 : _a.tabs;
             this.currentTabs.push({ stops, span: tabSpan });
         }
         return tabSpan;
@@ -3993,6 +4021,7 @@ section.${c}>footer { z-index: 1; }
         return result;
     }
     renderTable(elem) {
+        var _a, _b, _c;
         let result = this.createElement("table");
         this.tableCellPositions.push(this.currentCellPosition);
         this.tableVerticalMerges.push(this.currentVerticalMerge);
@@ -4002,10 +4031,10 @@ section.${c}>footer { z-index: 1; }
             result.appendChild(this.renderTableColumns(elem.columns));
         this.renderClass(elem, result);
         this.renderChildren(elem, result);
-        let tblpXSpec = elem.cssStyle?.tblpXSpec;
+        let tblpXSpec = (_a = elem.cssStyle) === null || _a === void 0 ? void 0 : _a.tblpXSpec;
         if (tblpXSpec === 'center') {
-            let num = parseFloat(elem.cssStyle?.width || '0');
-            let unit = elem.cssStyle?.width.replace(/[0-9]*/g, '').replace(/\./, '');
+            let num = parseFloat(((_b = elem.cssStyle) === null || _b === void 0 ? void 0 : _b.width) || '0');
+            let unit = (_c = elem.cssStyle) === null || _c === void 0 ? void 0 : _c.width.replace(/[0-9]*/g, '').replace(/\./, '');
             let left = ((100 - Number(num)) / 2).toFixed(2);
             elem.cssStyle['margin-left'] = `${left}${unit}`;
         }
@@ -4041,8 +4070,9 @@ section.${c}>footer { z-index: 1; }
         return result;
     }
     renderTableCell(elem) {
+        var _a;
         let result = this.createElement("td");
-        const key = this.currentCellPosition?.col;
+        const key = (_a = this.currentCellPosition) === null || _a === void 0 ? void 0 : _a.col;
         if (elem.verticalMerge) {
             if (elem.verticalMerge == "restart") {
                 this.currentVerticalMerge[key] = result;
@@ -4074,12 +4104,12 @@ section.${c}>footer { z-index: 1; }
         return result;
     }
     renderVmlElement(elem) {
+        var _a, _b;
         var container = createSvgElement("svg");
         container.setAttribute("style", elem.cssStyleText);
         const result = this.renderVmlChildElement(elem);
-        if (elem.imageHref?.id) {
-            this.document?.loadDocumentImage(elem.imageHref.id, this.currentPart)
-                .then(x => result.setAttribute("href", x));
+        if ((_a = elem.imageHref) === null || _a === void 0 ? void 0 : _a.id) {
+            (_b = this.document) === null || _b === void 0 ? void 0 : _b.loadDocumentImage(elem.imageHref.id, this.currentPart).then(x => result.setAttribute("href", x));
         }
         container.appendChild(result);
         requestAnimationFrame(() => {
@@ -4103,28 +4133,31 @@ section.${c}>footer { z-index: 1; }
         return result;
     }
     renderMmlRadical(elem) {
+        var _a;
         const base = elem.children.find(el => el.type == dom_1.DomType.MmlBase);
-        if (elem.props?.hideDegree) {
+        if ((_a = elem.props) === null || _a === void 0 ? void 0 : _a.hideDegree) {
             return createElementNS(ns.mathML, "msqrt", null, this.renderElements([base]));
         }
         const degree = elem.children.find(el => el.type == dom_1.DomType.MmlDegree);
         return createElementNS(ns.mathML, "mroot", null, this.renderElements([base, degree]));
     }
     renderMmlDelimiter(elem) {
+        var _a, _b;
         const children = [];
-        children.push(createElementNS(ns.mathML, "mo", null, [elem.props.beginChar ?? '(']));
+        children.push(createElementNS(ns.mathML, "mo", null, [(_a = elem.props.beginChar) !== null && _a !== void 0 ? _a : '(']));
         children.push(...this.renderElements(elem.children));
-        children.push(createElementNS(ns.mathML, "mo", null, [elem.props.endChar ?? ')']));
+        children.push(createElementNS(ns.mathML, "mo", null, [(_b = elem.props.endChar) !== null && _b !== void 0 ? _b : ')']));
         return createElementNS(ns.mathML, "mrow", null, children);
     }
     renderMmlNary(elem) {
+        var _a, _b;
         const children = [];
         const grouped = (0, utils_1.keyBy)(elem.children, x => x.type);
         const sup = grouped[dom_1.DomType.MmlSuperArgument];
         const sub = grouped[dom_1.DomType.MmlSubArgument];
         const supElem = sup ? createElementNS(ns.mathML, "mo", null, (0, utils_1.asArray)(this.renderElement(sup))) : null;
         const subElem = sub ? createElementNS(ns.mathML, "mo", null, (0, utils_1.asArray)(this.renderElement(sub))) : null;
-        const charElem = createElementNS(ns.mathML, "mo", null, [elem.props?.char ?? '\u222B']);
+        const charElem = createElementNS(ns.mathML, "mo", null, [(_b = (_a = elem.props) === null || _a === void 0 ? void 0 : _a.char) !== null && _b !== void 0 ? _b : '\u222B']);
         if (supElem || subElem) {
             children.push(createElementNS(ns.mathML, "munderover", null, [charElem, subElem, supElem]));
         }
@@ -4208,7 +4241,8 @@ section.${c}>footer { z-index: 1; }
             ouput.classList.add(this.processStyleName(input.styleName));
     }
     findStyle(styleName) {
-        return styleName && this.styleMap?.[styleName];
+        var _a;
+        return styleName && ((_a = this.styleMap) === null || _a === void 0 ? void 0 : _a[styleName]);
     }
     numberingClass(id, lvl) {
         return `${this.className}-num-${id}-${lvl}`;
@@ -4237,6 +4271,7 @@ section.${c}>footer { z-index: 1; }
         return `${this.className}-title-${lvl}`;
     }
     levelTextToContent(text, suff, id, numformat) {
+        var _a;
         const suffMap = {
             "tab": "\\9",
             "space": "\\a0",
@@ -4245,9 +4280,10 @@ section.${c}>footer { z-index: 1; }
             let lvl = parseInt(s.substring(1), 10) - 1;
             return `"counter(${this.numberingCounter(id, lvl)}, ${numformat})"`;
         });
-        return `"${result}${suffMap[suff] ?? ""}"`;
+        return `"${result}${(_a = suffMap[suff]) !== null && _a !== void 0 ? _a : ""}"`;
     }
     levelTextToContentOfTitle(text, suff, numformat) {
+        var _a;
         const suffMap = {
             "tab": "\\9",
             "space": "\\a0",
@@ -4256,9 +4292,10 @@ section.${c}>footer { z-index: 1; }
             let lvl = parseInt(s.substring(1), 10) - 1;
             return `"counter(${this.numberingTitleCounter(lvl)}, ${numformat})"`;
         });
-        return `"${result}${suffMap[suff] ?? ""}"`;
+        return `"${result}${(_a = suffMap[suff]) !== null && _a !== void 0 ? _a : ""}"`;
     }
     numFormatToCssValue(format) {
+        var _a;
         var mapping = {
             none: "none",
             bullet: "disc",
@@ -4295,7 +4332,7 @@ section.${c}>footer { z-index: 1; }
             taiwaneseCountingThousand: "cjk-ideographic",
             taiwaneseDigital: "cjk-decimal",
         };
-        return mapping[format] ?? format;
+        return (_a = mapping[format]) !== null && _a !== void 0 ? _a : format;
     }
     refreshTabStops() {
         if (!this.options.experimental)
@@ -4372,7 +4409,7 @@ function updateTabStop(elem, tabs, defaultTabSize, pixelToPoint = 72 / 96) {
     const ebb = elem.getBoundingClientRect();
     const pbb = p.getBoundingClientRect();
     const pcs = getComputedStyle(p);
-    const tabStops = tabs?.length > 0 ? tabs.map(t => ({
+    const tabStops = (tabs === null || tabs === void 0 ? void 0 : tabs.length) > 0 ? tabs.map(t => ({
         pos: lengthToPoint(t.position),
         leader: t.leader,
         style: t.style
@@ -4383,7 +4420,7 @@ function updateTabStop(elem, tabs, defaultTabSize, pixelToPoint = 72 / 96) {
     let pos = lastTab.pos + size;
     if (pos < pWidthPt) {
         for (; pos < pWidthPt && tabStops.length < maxTabs; pos += size) {
-            tabStops.push({ ...defaultTab, pos: pos });
+            tabStops.push(Object.assign(Object.assign({}, defaultTab), { pos: pos }));
         }
     }
     const marginLeft = parseFloat(pcs.marginLeft);
@@ -4703,7 +4740,8 @@ function parseXmlString(xmlString, trimXmlDeclaration = false) {
 }
 exports.parseXmlString = parseXmlString;
 function hasXmlParserError(doc) {
-    return doc.getElementsByTagName("parsererror")[0]?.textContent;
+    var _a;
+    return (_a = doc.getElementsByTagName("parsererror")[0]) === null || _a === void 0 ? void 0 : _a.textContent;
 }
 function removeUTF8BOM(data) {
     return data.charCodeAt(0) === 0xFEFF ? data.substring(1) : data;
@@ -4715,7 +4753,7 @@ exports.serializeXmlString = serializeXmlString;
 class XmlParser {
     elements(elem, localName = null) {
         const result = [];
-        for (let i = 0, l = elem?.childNodes.length || 0; i < l; i++) {
+        for (let i = 0, l = (elem === null || elem === void 0 ? void 0 : elem.childNodes.length) || 0; i < l; i++) {
             let c = elem.childNodes.item(i);
             if (c.nodeType == 1 && (localName == null || c.localName == localName))
                 result.push(c);
@@ -4723,7 +4761,7 @@ class XmlParser {
         return result;
     }
     element(elem, localName) {
-        for (let i = 0, l = elem?.childNodes.length || 0; i < l; i++) {
+        for (let i = 0, l = (elem === null || elem === void 0 ? void 0 : elem.childNodes.length) || 0; i < l; i++) {
             let c = elem.childNodes.item(i);
             if (c.nodeType == 1 && c.localName == localName)
                 return c;
@@ -4980,7 +5018,7 @@ exports.parseFontInfo = parseFontInfo;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.asArray = exports.formatCssRules = exports.parseCssRules = exports.mergeDeep = exports.isString = exports.isObject = exports.blobToBase64 = exports.keyBy = exports.resolvePath = exports.splitPath = exports.escapeClassName = void 0;
 function escapeClassName(className) {
-    return className?.replace(/[ .]+/g, '-').replace(/[&]+/g, 'and').toLowerCase();
+    return className === null || className === void 0 ? void 0 : className.replace(/[ .]+/g, '-').replace(/[&]+/g, 'and').toLowerCase();
 }
 exports.escapeClassName = escapeClassName;
 function splitPath(path) {
@@ -4996,7 +5034,7 @@ function resolvePath(path, base) {
         const url = new URL(path, prefix + base).toString();
         return url.substring(prefix.length);
     }
-    catch {
+    catch (_a) {
         return `${base}${path}`;
     }
 }
@@ -5026,13 +5064,14 @@ function isString(item) {
 }
 exports.isString = isString;
 function mergeDeep(target, ...sources) {
+    var _a;
     if (!sources.length)
         return target;
     const source = sources.shift();
     if (isObject(target) && isObject(source)) {
         for (const key in source) {
             if (isObject(source[key])) {
-                const val = target[key] ?? (target[key] = {});
+                const val = (_a = target[key]) !== null && _a !== void 0 ? _a : (target[key] = {});
                 mergeDeep(val, source[key]);
             }
             else {
@@ -5155,9 +5194,10 @@ function parseVmlElement(elem, parser) {
 }
 exports.parseVmlElement = parseVmlElement;
 function parseStroke(el) {
+    var _a;
     return {
         'stroke': xml_parser_1.default.attr(el, "color"),
-        'stroke-width': xml_parser_1.default.lengthAttr(el, "weight", common_1.LengthUsage.Emu) ?? '1px'
+        'stroke-width': (_a = xml_parser_1.default.lengthAttr(el, "weight", common_1.LengthUsage.Emu)) !== null && _a !== void 0 ? _a : '1px'
     };
 }
 function parseFill(el) {
@@ -5183,9 +5223,18 @@ function convertPath(path) {
 /*!******************************!*\
   !*** ./src/word-document.ts ***!
   \******************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.deobfuscate = exports.WordDocument = void 0;
 const relationship_1 = __webpack_require__(/*! ./common/relationship */ "./src/common/relationship.ts");
@@ -5215,96 +5264,108 @@ class WordDocument {
         this.parts = [];
         this.partsMap = {};
     }
-    static async load(blob, parser, options) {
-        var d = new WordDocument();
-        d._options = options;
-        d._parser = parser;
-        d._package = await open_xml_package_1.OpenXmlPackage.load(blob, options);
-        d.rels = await d._package.loadRelationships();
-        await Promise.all(topLevelRels.map(rel => {
-            const r = d.rels.find(x => x.type === rel.type) ?? rel;
-            return d.loadRelationshipPart(r.target, r.type);
-        }));
-        return d;
+    static load(blob, parser, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var d = new WordDocument();
+            d._options = options;
+            d._parser = parser;
+            d._package = yield open_xml_package_1.OpenXmlPackage.load(blob, options);
+            d.rels = yield d._package.loadRelationships();
+            yield Promise.all(topLevelRels.map(rel => {
+                var _a;
+                const r = (_a = d.rels.find(x => x.type === rel.type)) !== null && _a !== void 0 ? _a : rel;
+                return d.loadRelationshipPart(r.target, r.type);
+            }));
+            return d;
+        });
     }
     save(type = "blob") {
         return this._package.save(type);
     }
-    async loadRelationshipPart(path, type) {
-        if (this.partsMap[path])
-            return this.partsMap[path];
-        if (!this._package.get(path))
-            return null;
-        let part = null;
-        switch (type) {
-            case relationship_1.RelationshipTypes.OfficeDocument:
-                this.documentPart = part = new document_part_1.DocumentPart(this._package, path, this._parser);
-                break;
-            case relationship_1.RelationshipTypes.FontTable:
-                this.fontTablePart = part = new font_table_1.FontTablePart(this._package, path);
-                break;
-            case relationship_1.RelationshipTypes.Numbering:
-                this.numberingPart = part = new numbering_part_1.NumberingPart(this._package, path, this._parser);
-                break;
-            case relationship_1.RelationshipTypes.Styles:
-                this.stylesPart = part = new styles_part_1.StylesPart(this._package, path, this._parser);
-                break;
-            case relationship_1.RelationshipTypes.Theme:
-                this.themePart = part = new theme_part_1.ThemePart(this._package, path);
-                break;
-            case relationship_1.RelationshipTypes.Footnotes:
-                this.footnotesPart = part = new parts_2.FootnotesPart(this._package, path, this._parser);
-                break;
-            case relationship_1.RelationshipTypes.Endnotes:
-                this.endnotesPart = part = new parts_2.EndnotesPart(this._package, path, this._parser);
-                break;
-            case relationship_1.RelationshipTypes.Footer:
-                part = new parts_1.FooterPart(this._package, path, this._parser);
-                break;
-            case relationship_1.RelationshipTypes.Header:
-                part = new parts_1.HeaderPart(this._package, path, this._parser);
-                break;
-            case relationship_1.RelationshipTypes.CoreProperties:
-                this.corePropsPart = part = new core_props_part_1.CorePropsPart(this._package, path);
-                break;
-            case relationship_1.RelationshipTypes.ExtendedProperties:
-                this.extendedPropsPart = part = new extended_props_part_1.ExtendedPropsPart(this._package, path);
-                break;
-            case relationship_1.RelationshipTypes.CustomProperties:
-                part = new custom_props_part_1.CustomPropsPart(this._package, path);
-                break;
-            case relationship_1.RelationshipTypes.Settings:
-                this.settingsPart = part = new settings_part_1.SettingsPart(this._package, path);
-                break;
-            case relationship_1.RelationshipTypes.Comments:
-                this.commentsPart = part = new comments_part_1.CommentsPart(this._package, path, this._parser);
-                break;
-            case relationship_1.RelationshipTypes.CommentsExtended:
-                this.commentsExtendedPart = part = new commentsExtended_part_1.CommentsExtendedPart(this._package, path, this._parser);
-                break;
-        }
-        if (part == null)
-            return Promise.resolve(null);
-        this.partsMap[path] = part;
-        this.parts.push(part);
-        await part.load();
-        if (part.rels?.length > 0) {
-            const [folder] = (0, utils_1.splitPath)(part.path);
-            await Promise.all(part.rels.map(rel => this.loadRelationshipPart((0, utils_1.resolvePath)(rel.target, folder), rel.type)));
-        }
-        return part;
+    loadRelationshipPart(path, type) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.partsMap[path])
+                return this.partsMap[path];
+            if (!this._package.get(path))
+                return null;
+            let part = null;
+            switch (type) {
+                case relationship_1.RelationshipTypes.OfficeDocument:
+                    this.documentPart = part = new document_part_1.DocumentPart(this._package, path, this._parser);
+                    break;
+                case relationship_1.RelationshipTypes.FontTable:
+                    this.fontTablePart = part = new font_table_1.FontTablePart(this._package, path);
+                    break;
+                case relationship_1.RelationshipTypes.Numbering:
+                    this.numberingPart = part = new numbering_part_1.NumberingPart(this._package, path, this._parser);
+                    break;
+                case relationship_1.RelationshipTypes.Styles:
+                    this.stylesPart = part = new styles_part_1.StylesPart(this._package, path, this._parser);
+                    break;
+                case relationship_1.RelationshipTypes.Theme:
+                    this.themePart = part = new theme_part_1.ThemePart(this._package, path);
+                    break;
+                case relationship_1.RelationshipTypes.Footnotes:
+                    this.footnotesPart = part = new parts_2.FootnotesPart(this._package, path, this._parser);
+                    break;
+                case relationship_1.RelationshipTypes.Endnotes:
+                    this.endnotesPart = part = new parts_2.EndnotesPart(this._package, path, this._parser);
+                    break;
+                case relationship_1.RelationshipTypes.Footer:
+                    part = new parts_1.FooterPart(this._package, path, this._parser);
+                    break;
+                case relationship_1.RelationshipTypes.Header:
+                    part = new parts_1.HeaderPart(this._package, path, this._parser);
+                    break;
+                case relationship_1.RelationshipTypes.CoreProperties:
+                    this.corePropsPart = part = new core_props_part_1.CorePropsPart(this._package, path);
+                    break;
+                case relationship_1.RelationshipTypes.ExtendedProperties:
+                    this.extendedPropsPart = part = new extended_props_part_1.ExtendedPropsPart(this._package, path);
+                    break;
+                case relationship_1.RelationshipTypes.CustomProperties:
+                    part = new custom_props_part_1.CustomPropsPart(this._package, path);
+                    break;
+                case relationship_1.RelationshipTypes.Settings:
+                    this.settingsPart = part = new settings_part_1.SettingsPart(this._package, path);
+                    break;
+                case relationship_1.RelationshipTypes.Comments:
+                    this.commentsPart = part = new comments_part_1.CommentsPart(this._package, path, this._parser);
+                    break;
+                case relationship_1.RelationshipTypes.CommentsExtended:
+                    this.commentsExtendedPart = part = new commentsExtended_part_1.CommentsExtendedPart(this._package, path, this._parser);
+                    break;
+            }
+            if (part == null)
+                return Promise.resolve(null);
+            this.partsMap[path] = part;
+            this.parts.push(part);
+            yield part.load();
+            if (((_a = part.rels) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+                const [folder] = (0, utils_1.splitPath)(part.path);
+                yield Promise.all(part.rels.map(rel => this.loadRelationshipPart((0, utils_1.resolvePath)(rel.target, folder), rel.type)));
+            }
+            return part;
+        });
     }
-    async loadDocumentImage(id, part) {
-        const x = await this.loadResource(part ?? this.documentPart, id, "blob");
-        return this.blobToURL(x);
+    loadDocumentImage(id, part) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const x = yield this.loadResource(part !== null && part !== void 0 ? part : this.documentPart, id, "blob");
+            return this.blobToURL(x);
+        });
     }
-    async loadNumberingImage(id) {
-        const x = await this.loadResource(this.numberingPart, id, "blob");
-        return this.blobToURL(x);
+    loadNumberingImage(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const x = yield this.loadResource(this.numberingPart, id, "blob");
+            return this.blobToURL(x);
+        });
     }
-    async loadFont(id, key) {
-        const x = await this.loadResource(this.fontTablePart, id, "uint8array");
-        return x ? this.blobToURL(new Blob([deobfuscate(x, key)])) : x;
+    loadFont(id, key) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const x = yield this.loadResource(this.fontTablePart, id, "uint8array");
+            return x ? this.blobToURL(new Blob([deobfuscate(x, key)])) : x;
+        });
     }
     blobToURL(blob) {
         if (!blob)
@@ -5315,7 +5376,8 @@ class WordDocument {
         return URL.createObjectURL(blob);
     }
     findPartByRelId(id, basePart = null) {
-        var rel = (basePart.rels ?? this.rels).find(r => r.id == id);
+        var _a;
+        var rel = ((_a = basePart.rels) !== null && _a !== void 0 ? _a : this.rels).find(r => r.id == id);
         const folder = basePart ? (0, utils_1.splitPath)(basePart.path)[0] : '';
         return rel ? this.partsMap[(0, utils_1.resolvePath)(rel.target, folder)] : null;
     }
@@ -5351,45 +5413,44 @@ exports.deobfuscate = deobfuscate;
   \*******************************************************************************************************/
 /***/ ((module) => {
 
+var x = y => { var x = {}; __webpack_require__.d(x, y); return x; }
+var y = x => () => x
 module.exports = __WEBPACK_EXTERNAL_MODULE_jszip__;
 
 /***/ })
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
 /******/ 	}
-/******/ 	
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/cx-docx.ts");
-/******/ 	
-/******/ 	return __webpack_exports__;
-/******/ })()
-;
-});
-//# sourceMappingURL=cx-docx.umd.js.map
+/******/ 
+/******/ // startup
+/******/ // Load entry module and return exports
+/******/ // This entry module is referenced by other modules so it can't be inlined
+/******/ var __webpack_exports__ = __webpack_require__("./src/cx-docx.ts");
+/******/ 
+
+//# sourceMappingURL=cx-docx.mjs.map

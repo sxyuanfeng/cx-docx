@@ -1,0 +1,46 @@
+{
+  "name": "cx-docx",
+  "version": "0.1.7",
+  "license": "Apache-2.0",
+  "keywords": [
+    "word",
+    "docx"
+  ],
+  "author": {
+    "name": "libainan"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sxyuanfeng/cx-docx.git"
+  },
+  "dependencies": {
+    "jszip": ">=3.0.0"
+  },
+  "devDependencies": {
+    "diff": "^5.0.0",
+    "jasmine-core": "^5.1.0",
+    "karma": "^6.3.9",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-firefox-launcher": "^2.1.2",
+    "karma-jasmine": "^5.0.0",
+    "ts-loader": "^9.2.6",
+    "tslib": "^2.4.0",
+    "typescript": "^5.0.3",
+    "webpack": "^5.64.1",
+    "webpack-cli": "^5.0.1"
+  },
+  "scripts": {
+    "build": "webpack",
+    "build-prod": "webpack --mode production",
+    "build-umd": "webpack --env umd=true",
+    "build-all": "npm run build & npm run build-prod & npm run build-umd",
+    "watch": "webpack --env umd=true --watch",
+    "e2e": "karma start --single-run",
+    "e2e-watch": "karma start"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/cx-docx.min.mjs",
+  "types": "dist/cx-docx.d.ts"
+}
