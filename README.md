@@ -60,7 +60,7 @@ renderAsync(
         renderComments: false, // enables comments rendering
         renderOutline: false, // enables outline rendering
         renderNumbering: true, //enable numbering
-        debug: boolean = false, //enables additional logging
+        debug: boolean = false, //enables additional logging 
     }): Promise<any>
 ```
 
